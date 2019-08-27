@@ -1,0 +1,23 @@
+{
+  "name": "nap",
+  "version": "1.0.0",
+  "description": "Text searcher",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ktfth/nap.git"
+  },
+  "keywords": [
+    "text",
+    "searcher"
+  ],
+  "author": "Kaique da Silva <kaeyosthaeron@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ktfth/nap/issues"
+  },
+  "homepage": "https://github.com/ktfth/nap#readme"
+}
