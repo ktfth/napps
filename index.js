@@ -6,7 +6,7 @@ const searchData = new Transform({
     transform(chunk, encoding, callback) {
         let raw = chunk.toString();
         let presence = args.filter(v => {
-            if (raw.indexOf(v) > -1) {
+            if (findFn(v, raw)) {
                 return v;
             }
         });
