@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const isTTY = process.stdin.isTTY;
 const isPipe = !isTTY;
 const { Transform } = require('stream');
