@@ -1,4 +1,5 @@
-const isPipe = !Boolean(process.stdin.isTTY);
+const isTTY = Boolean(process.stdin.isTTY);
+const isPipe = !isTTY;
 const { Transform } = require('stream');
 const args = process.argv.slice(2);
 const searchData = new Transform({
