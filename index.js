@@ -25,5 +25,5 @@ if (isPipe) {
     process.stdin.resume();
 }
 
-let findFn = (v, content) => content.indeOf(v) > -1;
+let findFn = (v, content) => content.indexOf(v) > -1;
 exports.find = findFn;
