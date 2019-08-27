@@ -1,4 +1,4 @@
-const isTTY = Boolean(process.stdin.isTTY);
+const isTTY = process.stdin.isTTY;
 const isPipe = !isTTY;
 const { Transform } = require('stream');
 const args = process.argv.slice(2);
