@@ -7,7 +7,7 @@ Text searcher
 ## Installation
 
 ```
-[sudo] npm i -g nap
+[sudo] npm i -g node-nap
 ```
 
 ### Simple usage
