@@ -13,6 +13,6 @@ Text searcher
 ### Simple usage
 
 ```
-echo "some sample" | nap sample
+echo "some sample" | node-nap sample
 Present: sample
 ```
