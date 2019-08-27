@@ -8,7 +8,7 @@ const searchData = new Transform({
     transform(chunk, encoding, callback) {
         let raw = chunk.toString();
         let presence = args.filter(v => {
-            if (nap.findFn(v, raw)) {
+            if (nap.find(v, raw)) {
                 return v;
             }
         });
