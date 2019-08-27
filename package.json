@@ -1,15 +1,15 @@
 {
   "name": "node-nap",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "description": "Text searcher",
-  "bin": "./index.js",
+  "bin": "./bin/nap",
   "main": "index.js",
   "scripts": {
     "test": "mocha test/**/*.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/ktfth/nap.git"
+    "url": "git+ssh://git@github.com/ktfth/node-nap.git"
   },
   "keywords": [
     "text",
