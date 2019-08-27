@@ -1,4 +1,3 @@
-'use strict';
 const isPipe = !Boolean(process.stdin.isTTY);
 const { Transform } = require('stream');
 const args = process.argv.slice(2);
