@@ -1,5 +1,5 @@
 {
-  "name": "nap",
+  "name": "node-nap",
   "version": "1.0.0",
   "description": "Text searcher",
   "bin": "./index.js",
