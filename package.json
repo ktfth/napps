@@ -1,5 +1,5 @@
 {
-  "name": "nas",
+  "name": "naps",
   "version": "1.1.5",
   "description": "Text searcher",
   "bin": "./bin/nap",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/ktfth/nas.git"
+    "url": "git+ssh://git@github.com/ktfth/naps.git"
   },
   "keywords": [
     "text",

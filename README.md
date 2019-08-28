@@ -1,4 +1,4 @@
-# Nas 
+# Naps 
 
 ## Description
 
@@ -7,16 +7,16 @@ Text searcher
 ## Installation
 
 ```
-[sudo] npm i -g nas 
+[sudo] npm i -g naps 
 ```
 
 ### Simple usage
 
 ```
-echo "some sample" | nas sample
+echo "some sample" | naps sample
 Present: sample (1)
 ```
 
 ```
-cat sample.txt | nas sample --extract
+cat sample.txt | naps sample --extract
 ```
