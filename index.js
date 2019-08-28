@@ -35,13 +35,23 @@ let searchDataTransformFn = (args) => {
             let presenceRegexp = [];
             if (args.indexOf(_regularExpressionFlag) > -1 && (presence.length)) {
                 presenceRegexp = presence.map(v => {
-                    return new RegExp(v, 'g');
+                    return new RegExp(v);
                 });
             } if (args.indexOf(_extractFlag) === -1 && (presence.length)) {
-                presence = presence.map(v => v + ' (' + countFn(v, raw) + ')')
+                    presence = presence.map(v => v + ' (' + countFn(v, raw) + ')')
                 this.push(Buffer.from(presence.join('\n') + '\n'));
             } else if (args.indexOf(_extractFlag) > -1 && (presence.length)) {
-                presence = presence.map(v => extractFn(v, raw));
+                if (args.indexOf(_regularExpressionFlag) === -1) {
+                    presence = presence.map(v => extractFn(v, raw));
+                } else if (args.indexOf(_regularExpressionFlag > -1)) {
+                    presence = presenceRegexp.map((v, i) => {
+                        let out = '';
+                        let matchingCase = raw.match(v);
+                        out = matchingCase[0] + ' (' + matchingCase.input + ')'
+                        return out;
+                    });
+                }
+
                 this.push(Buffer.from(presence.join('\n')) + '\n');
             }
 
@@ -50,6 +60,19 @@ let searchDataTransformFn = (args) => {
     });
 };
 exports.searchDataTransform = searchDataTransformFn;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
