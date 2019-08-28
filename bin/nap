@@ -11,9 +11,9 @@ const searchData = new Transform({
             if (nap.find(v, raw)) {
                 return v;
             }
-        });
+        }).map(v => v + ' (' + nap.count(v, raw) + ')');
         if (presence.length) {
-            this.push(Buffer.from('Present: ' + presence.join(' ') + '\n'));
+            this.push(Buffer.from('Present: ' + presence.join(/\s|\,/) + '\n'));
         } else {
             this.push(Buffer.from('Unpresent terms!\n'));
         }
