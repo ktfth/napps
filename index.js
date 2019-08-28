@@ -25,15 +25,15 @@ let searchDataTransformFn = (args) => {
         transform(chunk, encoding, callback) {
             let raw = chunk.toString();
             let presence = args.filter(v => {
-                if (nap.find(v, raw) && (v !== _extractFlag)) {
+                if (findFn(v, raw) && (v !== _extractFlag)) {
                     return v;
                 }
             });
-            if (args.indexOf(nap.extractFlag) === -1 && (presence.length)) {
-                presence = presence.map(v => v + ' (' + nap.count(v, raw) + ')')
+            if (args.indexOf(_extractFlag) === -1 && (presence.length)) {
+                presence = presence.map(v => v + ' (' + countFn(v, raw) + ')')
                 this.push(Buffer.from('Present: ' + presence.join(/\s|\,/) + '\n'));
             } else if (args.indexOf(_extractFlag) > -1 && (presence.length)) {
-                presence = presence.map(v => nap.extract(v, raw));
+                presence = presence.map(v => extractFn(v, raw));
                 this.push(Buffer.from(presence.join(/\s|\,/)) + '\n');
             } else {
                 this.push(Buffer.from('Unpresent terms!\n'));
