@@ -14,3 +14,9 @@ describe('Nap text searcher', () => {
         assert.equal(nap.count('sample', 'sample some sample'), 2);
     });
 });
+
+describe('Nap text extractor', () => {
+    it('simple slicer', () => {
+        assert.equal(nap.extract('some', 'some sample\nanother sample'), 'some sample');
+    });
+});

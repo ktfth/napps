@@ -7,3 +7,10 @@ let countFn = (v, content) => {
     return out;
 };
 exports.count = countFn;
+
+let extractFn = (v, content) => {
+    let out = '';
+    out = content.split('\n').filter(l => findFn(v, l)).join('');
+    return out;
+};
+exports.extract = extractFn;
