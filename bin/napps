@@ -9,4 +9,6 @@ const searchData = nap.searchDataTransform(args);
 if (isPipe) {
     process.stdin.pipe(searchData).pipe(process.stdout);
     process.stdin.resume();
+} else if ((!isPipe && (isTTY)) && args.length) {
+    console.log('Traverse here a search');
 }
