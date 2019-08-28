@@ -20,6 +20,9 @@ exports.extract = extractFn;
 const _extractFlag = '--extract';
 exports.extractFlag = _extractFlag;
 
+const _regularExpressionFlag = '--re';
+exports.regularExpressionFlag = _regularExpressionFlag;
+
 let searchDataTransformFn = (args) => {
     return new Transform({
         transform(chunk, encoding, callback) {

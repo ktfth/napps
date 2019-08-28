@@ -27,6 +27,10 @@ describe('Nap flags', () => {
     it('extract', () => {
         assert.equal(nap.extractFlag, '--extract');
     });
+
+    it('regular expression', () => {
+        assert.equal(nap.regularExpressionFlag, '--re');
+    })
 });
 
 describe('Nap transform', () => {
