@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+const fs = require('fs');
 const isTTY = process.stdin.isTTY;
 const isPipe = !isTTY;
 const { Transform } = require('stream');
@@ -10,5 +11,10 @@ if (isPipe) {
     process.stdin.pipe(searchData).pipe(process.stdout);
     process.stdin.resume();
 } else if ((!isPipe && (isTTY)) && args.length) {
+    let directory = fs.readdirSync(process.cwd(), {
+      withFileTypes: true
+    });
     console.log('Traverse here a search');
+    console.log(directory);
+    console.log(directory[1].isDirectory());
 }
