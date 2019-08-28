@@ -8,11 +8,11 @@ const searchData = new Transform({
     transform(chunk, encoding, callback) {
         let raw = chunk.toString();
         let presence = args.filter(v => {
-            if (nap.find(v, raw) && (v !== '--extract')) {
+            if (nap.find(v, raw) && (v !== nap.extractFlag)) {
                 return v;
             }
         });
-        if (args.indexOf('--extract') === -1 && (presence.length)) {
+        if (args.indexOf(nap.extractFlag) === -1 && (presence.length)) {
             presence = presence.map(v => v + ' (' + nap.count(v, raw) + ')') 
             this.push(Buffer.from('Present: ' + presence.join(/\s|\,/) + '\n'));
         } else if (args.indexOf('--extract') > -1 && (presence.length)) {

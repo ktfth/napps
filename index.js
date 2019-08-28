@@ -14,3 +14,5 @@ let extractFn = (v, content) => {
     return out;
 };
 exports.extract = extractFn;
+
+exports.extractFlag = '--extract';

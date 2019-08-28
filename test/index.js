@@ -20,3 +20,9 @@ describe('Nap text extractor', () => {
         assert.equal(nap.extract('some', 'some sample\nanother sample'), 'some sample');
     });
 });
+
+describe('Nap flags', () => {
+    it('extract', () => {
+        assert.equal(nap.extractFlag, '--extract');
+    });
+});
