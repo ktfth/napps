@@ -31,10 +31,10 @@ let searchDataTransformFn = (args) => {
             });
             if (args.indexOf(_extractFlag) === -1 && (presence.length)) {
                 presence = presence.map(v => v + ' (' + countFn(v, raw) + ')')
-                this.push(Buffer.from('Present: ' + presence.join(/\s|\,/) + '\n'));
+                this.push(Buffer.from('Present: ' + presence.join('\n') + '\n'));
             } else if (args.indexOf(_extractFlag) > -1 && (presence.length)) {
                 presence = presence.map(v => extractFn(v, raw));
-                this.push(Buffer.from(presence.join(/\s|\,/)) + '\n');
+                this.push(Buffer.from(presence.join('\n')) + '\n');
             } else {
                 this.push(Buffer.from('Unpresent terms!\n'));
             }
