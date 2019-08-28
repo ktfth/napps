@@ -28,11 +28,16 @@ let searchDataTransformFn = (args) => {
         transform(chunk, encoding, callback) {
             let raw = chunk.toString();
             let presence = args.filter(v => {
-                if (findFn(v, raw) && (v !== _extractFlag)) {
+                if (findFn(v, raw) && (v !== _extractFlag || v !== _regularExpressionFlag)) {
                     return v;
                 }
             });
-            if (args.indexOf(_extractFlag) === -1 && (presence.length)) {
+            let presenceRegexp = [];
+            if (args.indexOf(_regularExpressionFlag) > -1 && (presence.length)) {
+                presenceRegexp = presence.map(v => {
+                    return new RegExp(v, 'g');
+                });
+            } if (args.indexOf(_extractFlag) === -1 && (presence.length)) {
                 presence = presence.map(v => v + ' (' + countFn(v, raw) + ')')
                 this.push(Buffer.from(presence.join('\n') + '\n'));
             } else if (args.indexOf(_extractFlag) > -1 && (presence.length)) {
@@ -45,3 +50,14 @@ let searchDataTransformFn = (args) => {
     });
 };
 exports.searchDataTransform = searchDataTransformFn;
+
+
+
+
+
+
+
+
+
+
+
