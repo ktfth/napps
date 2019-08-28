@@ -1,6 +1,8 @@
 const assert = require('assert');
 const nap = require('../');
 
+const { Transform } = require('stream');
+
 describe('Nap text searcher', () => {
     it('find text in content', () => {
         assert.ok(nap.find('love', 'i love grapes'), 'failing on find content')
@@ -24,5 +26,11 @@ describe('Nap text extractor', () => {
 describe('Nap flags', () => {
     it('extract', () => {
         assert.equal(nap.extractFlag, '--extract');
+    });
+});
+
+describe('Nap transform', () => {
+    it('instantiation across function', () => {
+        assert.ok(nap.searchDataTransform([]) instanceof Transform);
     });
 });

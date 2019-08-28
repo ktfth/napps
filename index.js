@@ -1,3 +1,5 @@
+const { Transform } = require('stream');
+
 let findFn = (v, content) => content.indexOf(v) > -1;
 exports.find = findFn;
 
@@ -15,4 +17,30 @@ let extractFn = (v, content) => {
 };
 exports.extract = extractFn;
 
-exports.extractFlag = '--extract';
+const _extractFlag = '--extract';
+exports.extractFlag = _extractFlag;
+
+let searchDataTransformFn = (args) => {
+    return new Transform({
+        transform(chunk, encoding, callback) {
+            let raw = chunk.toString();
+            let presence = args.filter(v => {
+                if (nap.find(v, raw) && (v !== _extractFlag)) {
+                    return v;
+                }
+            });
+            if (args.indexOf(nap.extractFlag) === -1 && (presence.length)) {
+                presence = presence.map(v => v + ' (' + nap.count(v, raw) + ')')
+                this.push(Buffer.from('Present: ' + presence.join(/\s|\,/) + '\n'));
+            } else if (args.indexOf(_extractFlag) > -1 && (presence.length)) {
+                presence = presence.map(v => nap.extract(v, raw));
+                this.push(Buffer.from(presence.join(/\s|\,/)) + '\n');
+            } else {
+                this.push(Buffer.from('Unpresent terms!\n'));
+            }
+
+            callback();
+        }
+    });
+};
+exports.searchDataTransform = searchDataTransformFn;

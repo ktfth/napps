@@ -4,27 +4,7 @@ const isPipe = !isTTY;
 const { Transform } = require('stream');
 const args = process.argv.slice(2);
 const nap = require('../');
-const searchData = new Transform({
-    transform(chunk, encoding, callback) {
-        let raw = chunk.toString();
-        let presence = args.filter(v => {
-            if (nap.find(v, raw) && (v !== nap.extractFlag)) {
-                return v;
-            }
-        });
-        if (args.indexOf(nap.extractFlag) === -1 && (presence.length)) {
-            presence = presence.map(v => v + ' (' + nap.count(v, raw) + ')') 
-            this.push(Buffer.from('Present: ' + presence.join(/\s|\,/) + '\n'));
-        } else if (args.indexOf('--extract') > -1 && (presence.length)) {
-            presence = presence.map(v => nap.extract(v, raw));
-            this.push(Buffer.from(presence.join(/\s|\,/)) + '\n');
-        } else {
-            this.push(Buffer.from('Unpresent terms!\n'));
-        }
-
-        callback();
-    }
-})
+const searchData = nap.searchDataTransorm(args);
 
 if (isPipe) {
     process.stdin.pipe(searchData).pipe(process.stdout);
