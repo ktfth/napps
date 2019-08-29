@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const fs = require('fs');
+const path = require('path');
 const isTTY = process.stdin.isTTY;
 const isPipe = !isTTY;
 const { Transform } = require('stream');
@@ -11,10 +12,31 @@ if (isPipe) {
     process.stdin.pipe(searchData).pipe(process.stdout);
     process.stdin.resume();
 } else if ((!isPipe && (isTTY)) && args.length) {
-    let directory = fs.readdirSync(process.cwd(), {
-      withFileTypes: true
-    });
-    console.log('Traverse here a search');
-    console.log(directory);
-    console.log(directory[1].isDirectory());
+    let traversalSearch = dir => {
+        let directory = fs.readdirSync(dir, {
+            withFileTypes: true
+        });
+        let _cacheDirectory = [];
+        if (directory) {
+            // directory.filter(dirent => {
+            //     return dirent.isDirectory() && !(dirent.name.indexOf('.') === 0);
+            // }).map(directory => {
+            //   let access = path.resolve(dir, directory.name);
+            //   return traversalSearch(access);
+            // });
+            _cacheDirectory = directory.filter(dirent => {
+                return dirent.isFile();
+            });
+
+            for (let i = 0, l = _cacheDirectory.length; i < l; i += 1) {
+              let file = _cacheDirectory[i];
+              let filePath = path.resolve(process.cwd(), file.name);
+              console.log(filePath);
+              fs.createReadStream(filePath)
+                .pipe(searchData)
+                .pipe(process.stdout)
+            }
+        }
+    };
+    traversalSearch(process.cwd());
 }

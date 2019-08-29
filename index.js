@@ -28,7 +28,9 @@ let searchDataTransformFn = (args) => {
         transform(chunk, encoding, callback) {
             let raw = chunk.toString();
             let presence = args.filter(v => {
-                if (findFn(v, raw) && (v !== _extractFlag || v !== _regularExpressionFlag)) {
+                if (findFn(v, raw) && (v !== _extractFlag && v !== _regularExpressionFlag)) {
+                    return v;
+                } if (findFn(v, raw) && (v !== _extractFlag)) {
                     return v;
                 }
             });
@@ -60,27 +62,3 @@ let searchDataTransformFn = (args) => {
     });
 };
 exports.searchDataTransform = searchDataTransformFn;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
