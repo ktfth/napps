@@ -41,7 +41,13 @@ let searchDataTransformFn = (args, filePath, line) => {
                 });
             } if (args.indexOf(_extractFlag) === -1 && (presence.length)) {
                     presence = presence.map(v => v + ' (' + countFn(v, raw) + ')')
-                this.push(Buffer.from(filePath + ':' + line + '\n' + presence.join('\n') + '\n'));
+                    if (process.stdin.isTTY) {
+                        this.push(Buffer.from(filePath + ':' + line + '\n' + presence.join('\n') + '\n'));
+                    }
+
+                    if (!process.stdin.isTTY) {
+                        this.push(Buffer.from(presence.join('\n')) + '\n');
+                    }
             } else if (args.indexOf(_extractFlag) > -1 && (presence.length)) {
                 if (args.indexOf(_regularExpressionFlag) === -1) {
                     presence = presence.map(v => extractFn(v, raw));
@@ -54,7 +60,13 @@ let searchDataTransformFn = (args, filePath, line) => {
                     });
                 }
 
-                this.push(Buffer.from(filePath + ':' + line + '\n' + presence.join('\n')) + '\n');
+                if (process.stdin.isTTY) {
+                    this.push(Buffer.from(filePath + ':' + line + '\n' + presence.join('\n')) + '\n');
+                }
+
+                if (!process.stdin.isTTY) {
+                    this.push(Buffer.from(presence.join('\n')) + '\n');
+                }
             }
 
             callback();
