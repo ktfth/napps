@@ -20,32 +20,40 @@ if (isPipe) {
             withFileTypes: true
         });
         let _cacheDirectory = [];
+        let _cacheDirectories = [];
         if (directory) {
-            if (limit === 3) {
-                directory.filter(dirent => {
-                    return dirent.isDirectory() && !(dirent.name.indexOf('.') === 0);
-                }).map(directory => {
-                    let access = path.resolve(dir, directory.name);
-                    return traversalSearch(access);
-                });
-
-                limit += 1
-            }
-
             _cacheDirectory = directory.filter(dirent => {
                 return dirent.isFile();
             });
 
             let processPipeline = filePath => {
-                let fileStream = fs.createReadStream(filePath);
-                fileStream.pipe(searchData).pipe(process.stdout)
-                delete fileStream;
+                if (fs.existsSync(filePath)) {
+                    let fileStream = fs.createReadStream(filePath);
+                    fileStream.pipe(searchData).pipe(process.stdout);
+                    return fileStream;
+                }
             };
 
             for (let i = 0, l = _cacheDirectory.length; i < l; i += 1) {
               let file = _cacheDirectory[i];
               let filePath = path.resolve(process.cwd(), file.name);
-              processPipeline(filePath);
+              let fileStream = processPipeline(filePath);
+            }
+
+            if (limit < 3) {
+                _cacheDirectories = directory.filter(dirent => {
+                    return dirent.isDirectory() && !(dirent.name.indexOf('.') === 0);
+                })
+
+                for (let i = 0, l = _cacheDirectories.length; i < l; i += 1) {
+                    let directory = _cacheDirectories[i];
+                    let access = path.resolve(dir, directory.name);
+                    if (fs.existsSync(access)) {
+                      return traversalSearch(access);
+                    }
+                }
+
+                limit += 1;
             }
         }
     };
