@@ -15,27 +15,37 @@ if (isPipe) {
 } else if ((!isPipe && (isTTY)) && args.length) {
     searchData = nap.searchDataTransform(args);
     let traversalSearch = dir => {
+        let limit = 0
         let directory = fs.readdirSync(dir, {
             withFileTypes: true
         });
         let _cacheDirectory = [];
         if (directory) {
-            // directory.filter(dirent => {
-            //     return dirent.isDirectory() && !(dirent.name.indexOf('.') === 0);
-            // }).map(directory => {
-            //   let access = path.resolve(dir, directory.name);
-            //   return traversalSearch(access);
-            // });
+            if (limit === 3) {
+                directory.filter(dirent => {
+                    return dirent.isDirectory() && !(dirent.name.indexOf('.') === 0);
+                }).map(directory => {
+                    let access = path.resolve(dir, directory.name);
+                    return traversalSearch(access);
+                });
+
+                limit += 1
+            }
+
             _cacheDirectory = directory.filter(dirent => {
                 return dirent.isFile();
             });
 
+            let processPipeline = filePath => {
+                let fileStream = fs.createReadStream(filePath);
+                fileStream.pipe(searchData).pipe(process.stdout)
+                delete fileStream;
+            };
+
             for (let i = 0, l = _cacheDirectory.length; i < l; i += 1) {
               let file = _cacheDirectory[i];
               let filePath = path.resolve(process.cwd(), file.name);
-              fs.createReadStream(filePath)
-                .pipe(searchData)
-                .pipe(process.stdout)
+              processPipeline(filePath);
             }
         }
     };
