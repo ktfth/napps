@@ -14,28 +14,21 @@ if (isPipe) {
     process.stdin.resume();
 } else if ((!isPipe && (isTTY)) && args.length) {
     // searchData = nap.searchDataTransform(args);
-    let traversalSearch = dir => {
+    let traversalSearch = (dir, dirs) => {
         let limit = 0
         let directory = fs.readdirSync(dir, {
             withFileTypes: true
         });
         let _cacheDirectory = [];
-        let _cacheDirectories = [];
+        let _cacheDirectories = dirs;
         if (directory) {
             _cacheDirectory = directory.filter(dirent => {
                 return dirent.isFile() && !(dirent.name.indexOf('.') === 0);
             });
 
-            // let processPipeline = filePath => {
-            //     let cb = () => {
-            //       let fileStream = fs.createReadStream(filePath);
-            //       return fileStream;
-            //     };
-            //     if (fs.existsSync(filePath)) {
-            //         return cb;
-            //     }
-            //     return null;
-            // };
+            _cacheDirectories = directory.filter(dirent => {
+                return dirent.isDirectory() && !(dirent.name.indexOf('.') === 0);
+            });
 
             for (let i = 0, l = _cacheDirectory.length; i < l; i += 1) {
               let file = _cacheDirectory[i];
@@ -47,29 +40,18 @@ if (isPipe) {
                       .pipe(process.stdout);
                   }
               });
-              // let readedFile = fs.readFileSync(filePath);
-              // if (readedFile) {
-              //     let fileStream = processPipeline(filePath);
-              //     if (fileStream()) {
-              //         fileStream().pipe(searchData).pipe(process.stdout);
-              //     }
-              // }
             }
 
-            if (limit < 3) {
-                _cacheDirectories = directory.filter(dirent => {
-                    return dirent.isDirectory() && !(dirent.name.indexOf('.') === 0);
-                });
-
+            if (limit <= 10) {
                 for (let i = 0, l = _cacheDirectories.length; i < l; i += 1) {
                     let directory = _cacheDirectories[i];
                     let access = path.resolve(dir, directory.name);
                     if (fs.existsSync(access)) {
-                      return traversalSearch(access);
+                      return traversalSearch(access, _cacheDirectories);
                     }
-                }
 
-                limit += 1;
+                    limit += 1;
+                }
             }
         }
     };

@@ -7,14 +7,14 @@ Text searcher
 ## Installation
 
 ```
-[sudo] npm i -g napps 
+[sudo] npm i -g napps
 ```
 
 ### Simple usage
 
 ```
 echo "some sample" | napps sample
-Present: sample (1)
+sample (1)
 ```
 
 ```
