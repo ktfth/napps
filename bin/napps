@@ -29,8 +29,9 @@ if (isPipe) {
             let processPipeline = filePath => {
                 if (fs.existsSync(filePath)) {
                     let fileStream = fs.createReadStream(filePath);
-                    fileStream.pipe(searchData).pipe(process.stdout);
                     return fileStream;
+                } else {
+                    return null;
                 }
             };
 
@@ -38,6 +39,14 @@ if (isPipe) {
               let file = _cacheDirectory[i];
               let filePath = path.resolve(process.cwd(), file.name);
               let fileStream = processPipeline(filePath);
+              if (fileStream) {
+                  fileStream.pipe(searchData).pipe(process.stdout);
+                  setTimeout(() => {
+                      fileStream.close();
+                      fileStream.push(null);
+                      fileStream.read(0);
+                  }, 100);
+              }
             }
 
             if (limit < 3) {
