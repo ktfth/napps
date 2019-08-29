@@ -6,12 +6,14 @@ const isPipe = !isTTY;
 const { Transform } = require('stream');
 const args = process.argv.slice(2);
 const nap = require('../');
-const searchData = nap.searchDataTransform(args);
+let searchData = null;
 
 if (isPipe) {
+    searchData = nap.searchDataTransform(args);
     process.stdin.pipe(searchData).pipe(process.stdout);
     process.stdin.resume();
 } else if ((!isPipe && (isTTY)) && args.length) {
+    searchData = nap.searchDataTransform(args);
     let traversalSearch = dir => {
         let directory = fs.readdirSync(dir, {
             withFileTypes: true
@@ -31,7 +33,6 @@ if (isPipe) {
             for (let i = 0, l = _cacheDirectory.length; i < l; i += 1) {
               let file = _cacheDirectory[i];
               let filePath = path.resolve(process.cwd(), file.name);
-              console.log(filePath);
               fs.createReadStream(filePath)
                 .pipe(searchData)
                 .pipe(process.stdout)
