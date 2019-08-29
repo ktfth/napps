@@ -13,7 +13,7 @@ if (isPipe) {
     process.stdin.pipe(searchData).pipe(process.stdout);
     process.stdin.resume();
 } else if ((!isPipe && (isTTY)) && args.length) {
-    searchData = nap.searchDataTransform(args);
+    // searchData = nap.searchDataTransform(args);
     let traversalSearch = dir => {
         let limit = 0
         let directory = fs.readdirSync(dir, {
@@ -26,33 +26,40 @@ if (isPipe) {
                 return dirent.isFile() && !(dirent.name.indexOf('.') === 0);
             });
 
-            let processPipeline = filePath => {
-                if (fs.existsSync(filePath)) {
-                    let fileStream = fs.createReadStream(filePath);
-                    return fileStream;
-                } else {
-                    return null;
-                }
-            };
+            // let processPipeline = filePath => {
+            //     let cb = () => {
+            //       let fileStream = fs.createReadStream(filePath);
+            //       return fileStream;
+            //     };
+            //     if (fs.existsSync(filePath)) {
+            //         return cb;
+            //     }
+            //     return null;
+            // };
 
             for (let i = 0, l = _cacheDirectory.length; i < l; i += 1) {
               let file = _cacheDirectory[i];
-              let filePath = path.resolve(process.cwd(), file.name);
-              let fileStream = processPipeline(filePath);
-              if (fileStream) {
-                  fileStream.pipe(searchData).pipe(process.stdout);
-                  setTimeout(() => {
-                      fileStream.close();
-                      fileStream.push(null);
-                      fileStream.read(0);
-                  }, 100);
-              }
+              let filePath = path.resolve(dir, file.name);
+              fs.readFile(filePath, (err, data) => {
+                  if (!err) {
+                    fs.createReadStream(filePath)
+                      .pipe(nap.searchDataTransform(args))
+                      .pipe(process.stdout);
+                  }
+              });
+              // let readedFile = fs.readFileSync(filePath);
+              // if (readedFile) {
+              //     let fileStream = processPipeline(filePath);
+              //     if (fileStream()) {
+              //         fileStream().pipe(searchData).pipe(process.stdout);
+              //     }
+              // }
             }
 
             if (limit < 3) {
                 _cacheDirectories = directory.filter(dirent => {
                     return dirent.isDirectory() && !(dirent.name.indexOf('.') === 0);
-                })
+                });
 
                 for (let i = 0, l = _cacheDirectories.length; i < l; i += 1) {
                     let directory = _cacheDirectories[i];
