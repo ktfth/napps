@@ -23,7 +23,7 @@ if (isPipe) {
         let _cacheDirectories = [];
         if (directory) {
             _cacheDirectory = directory.filter(dirent => {
-                return dirent.isFile();
+                return dirent.isFile() && !(dirent.name.indexOf('.') === 0);
             });
 
             let processPipeline = filePath => {
