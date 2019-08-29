@@ -14,7 +14,7 @@ if (isPipe) {
     process.stdin.resume();
 } else if ((!isPipe && (isTTY)) && args.length) {
     // searchData = nap.searchDataTransform(args);
-    let traversalSearch = (dir, dirs) => {
+    let traversalSearch = (dir, dirs=[]) => {
         let limit = 0
         let directory = fs.readdirSync(dir, {
             withFileTypes: true
@@ -47,7 +47,7 @@ if (isPipe) {
                     let directory = _cacheDirectories[i];
                     let access = path.resolve(dir, directory.name);
                     if (fs.existsSync(access)) {
-                      return traversalSearch(access, _cacheDirectories);
+                        traversalSearch(access, _cacheDirectories);
                     }
 
                     limit += 1;
