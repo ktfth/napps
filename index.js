@@ -28,6 +28,11 @@ let hasNotExtraction = v => {
 };
 exports.hasNotExtraction = hasNotExtraction;
 
+let hasNotRegExp = v => {
+    return v !== _regularExpressionFlag;
+};
+exports.hasNotRegExp = hasNotRegExp;
+
 let hasNotExtractionWithRegExpFlag = v => {
     let out = false;
     let isNotExtractFlag = hasNotExtraction(v);
@@ -58,6 +63,10 @@ let searchDataTransformFn = (args, filePath, line) => {
         });
     };
 
+    let hasExtractFlagWithPresence = (args, presence) => {
+        return args.indexOf(_extractFlag) === -1 && (presence.length);
+    };
+
     return new Transform({
         transform(chunk, encoding, callback) {
             let raw = chunk.toString();
@@ -67,7 +76,7 @@ let searchDataTransformFn = (args, filePath, line) => {
                 presenceRegexp = presence.map(v => {
                     return new RegExp(v);
                 });
-            } if (args.indexOf(_extractFlag) === -1 && (presence.length)) {
+            } if (hasExtractFlagWithPresence(args, presence)) {
                     presence = presence.map(v => v + ' (' + countFn(v, raw) + ')')
                     if (process.stdin.isTTY) {
                         this.push(Buffer.from(filePath + ':' + line + '\n' + presence.join('\n') + '\n'));
