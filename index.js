@@ -67,6 +67,12 @@ let hasExtractFlagWithPresence = (args, presence) => {
 };
 exports.hasExtractFlagWithPresence = hasExtractFlagWithPresence;
 
+let hasRegExpFlagAndRegExpMap = (args, presenceRegexp) => {
+    let hasRegExpFlag = args.indexOf(_regularExpressionFlag > -1);
+    return hasRegExpFlag && presenceRegexp !== undefined;
+};
+exports.hasRegExpFlagAndRegExpMap = hasRegExpFlagAndRegExpMap;
+
 let searchDataTransformFn = (args, filePath, line) => {
     let presenceFn = (raw, args) => {
         return args.filter(v => {
@@ -104,7 +110,7 @@ let searchDataTransformFn = (args, filePath, line) => {
             } else if (hasExtractFlagWithPresence(args, presence)) {
                 if (args.indexOf(_regularExpressionFlag) === -1) {
                     presence = presence.map(v => extractFn(v, raw));
-                } if (args.indexOf(_regularExpressionFlag > -1) && presenceRegexp !== undefined) {
+                } if (hasRegExpFlagAndRegExpMap(args, presenceRegexp)) {
                     presence = presenceRegexp.map((v, i) => {
                         let out = '';
                         let matchingCase = raw.match(v);
