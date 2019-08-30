@@ -52,6 +52,10 @@ let findAndHasNotFlag = (v, content) => {
 };
 exports.findAndHasNotFlag = findAndHasNotFlag;
 
+exports.hasRegExpFlagInArgs = (args) => {
+    return args.indexOf(_regularExpressionFlag) > -1;
+};
+
 let searchDataTransformFn = (args, filePath, line) => {
     let presenceFn = (raw, args) => {
         return args.filter(v => {
@@ -67,16 +71,25 @@ let searchDataTransformFn = (args, filePath, line) => {
         return args.indexOf(_extractFlag) === -1 && (presence.length);
     };
 
+    let hasRegExpFlag = (args) => {
+        return args.indexOf(_regularExpressionFlag) > -1;
+    };
+
+    let prepareRegExpPresence = (args, presence) => {
+      if (hasRegExpFlag(args) && (presence.length)) {
+          presenceRegexp = presence.map(v => {
+              return new RegExp(v);
+          });
+      }
+    };
+
     return new Transform({
         transform(chunk, encoding, callback) {
             let raw = chunk.toString();
             let presence = presenceFn(raw, args);
-            let presenceRegexp = [];
-            if (args.indexOf(_regularExpressionFlag) > -1 && (presence.length)) {
-                presenceRegexp = presence.map(v => {
-                    return new RegExp(v);
-                });
-            } if (hasNotExtractFlagWithPresence(args, presence)) {
+            let presenceRegexp = prepareRegExpPresence(args, presence);
+
+            if (hasNotExtractFlagWithPresence(args, presence)) {
                     presence = presence.map(v => v + ' (' + countFn(v, raw) + ')')
                     if (process.stdin.isTTY) {
                         this.push(Buffer.from(filePath + ':' + line + '\n' + presence.join('\n') + '\n'));
