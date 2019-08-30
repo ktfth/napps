@@ -62,6 +62,11 @@ let hasNotExtractFlagWithPresence = (args, presence) => {
 }
 exports.hasNotExtractFlagWithPresence = hasNotExtractFlagWithPresence;
 
+let hasExtractFlagWithPresence = (args, presence) => {
+    return args.indexOf(_extractFlag) > -1 && (presence.length);
+};
+exports.hasExtractFlagWithPresence = hasExtractFlagWithPresence;
+
 let searchDataTransformFn = (args, filePath, line) => {
     let presenceFn = (raw, args) => {
         return args.filter(v => {
@@ -96,7 +101,7 @@ let searchDataTransformFn = (args, filePath, line) => {
                     if (!process.stdin.isTTY) {
                         this.push(Buffer.from(presence.join('\n')) + '\n');
                     }
-            } else if (args.indexOf(_extractFlag) > -1 && (presence.length)) {
+            } else if (hasExtractFlagWithPresence(args, presence)) {
                 if (args.indexOf(_regularExpressionFlag) === -1) {
                     presence = presence.map(v => extractFn(v, raw));
                 } else if (args.indexOf(_regularExpressionFlag > -1)) {
