@@ -32,6 +32,10 @@ describe('Nap flags', () => {
         assert.equal(nap.regularExpressionFlag, '--re');
     });
 
+    it('has not extraction flag function', () => {
+        assert.ok(nap.hasNotExtraction('--other'));
+    })
+
     it('has not extraction with regexp flag function', () => {
         assert.ok(nap.hasNotExtractionWithRegExpFlag('--other'));
     });

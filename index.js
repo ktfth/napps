@@ -23,9 +23,14 @@ exports.extractFlag = _extractFlag;
 const _regularExpressionFlag = '--re';
 exports.regularExpressionFlag = _regularExpressionFlag;
 
+let hasNotExtraction = v => {
+    return v !== _extractFlag;
+};
+exports.hasNotExtraction = hasNotExtraction;
+
 let hasNotExtractionWithRegExpFlag = v => {
     let out = false;
-    let isNotExtractFlag = v !== _extractFlag;
+    let isNotExtractFlag = hasNotExtraction(v);
     let isNotRegExpFlag = v !== _regularExpressionFlag;
     out = (isNotExtractFlag && isNotRegExpFlag);
     return out;
