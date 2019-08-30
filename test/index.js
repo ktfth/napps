@@ -55,6 +55,10 @@ describe('Nap flags', () => {
     it('has not extraction with regexp flag function', () => {
         assert.ok(nap.hasNotExtractionWithRegExpFlag('--other'));
     });
+
+    it('has not regexp flag with presence', () => {
+        assert.ok(nap.hasNotExtractFlagWithPresence(['--other'], ['some-value']));
+    });
 });
 
 describe('Nap transform', () => {
