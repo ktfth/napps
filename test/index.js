@@ -19,6 +19,10 @@ describe('Nap text searcher', () => {
     it('find and has not verified flags', () => {
         assert.ok(nap.findAndHasNotFlags('love', 'i love grapes'));
     });
+
+    it('find and has not extraction flag', () => {
+        assert.ok(nap.findAndHasNotFlag('love', 'i love grapes'));
+    })
 });
 
 describe('Nap text extractor', () => {
