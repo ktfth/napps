@@ -5,7 +5,8 @@ exports.find = findFn;
 
 let countFn = (v, content) => {
     let out = 0;
-    out = content.match(new RegExp(v, 'ig')).length;
+    out = content.match(new RegExp(v, 'ig'));
+    out = out === null ? 0 : out.length;
     return out;
 };
 exports.count = countFn;
@@ -81,10 +82,8 @@ exports.hasRegExpFlagAndRegExpMap = hasRegExpFlagAndRegExpMap;
 let searchDataTransformFn = (args, filePath, line) => {
     let presenceFn = (raw, args) => {
         return args.filter(v => {
-            if (findAndHasNotFlags(v, raw)) {
-                return v;
-            } if (findAndHasNotFlag(v, raw)) {
-                return v;
+            if (!(v.indexOf('--') === 0)) {
+              return v;
             }
         });
     };
