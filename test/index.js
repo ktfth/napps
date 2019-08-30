@@ -68,6 +68,10 @@ describe('Nap flags', () => {
         assert.ok(nap.hasRegExpFlagAndRegExpMap(['--re'],
                                                 [new RegExp('some-value')]));
     })
+
+    it('has not regexp flag', () => {
+        assert.ok(nap.hasNotRegExpFlag(['--other']));
+    });
 });
 
 describe('Nap transform', () => {
