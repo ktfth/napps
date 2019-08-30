@@ -37,10 +37,15 @@ let hasNotExtractionWithRegExpFlag = v => {
 };
 exports.hasNotExtractionWithRegExpFlag = hasNotExtractionWithRegExpFlag;
 
+let findAndHasNotFlags = (v, content) => {
+    return findFn(v, content) && hasNotExtractionWithRegExpFlag(v);
+};
+exports.findAndHasNotFlags = findAndHasNotFlags;
+
 let searchDataTransformFn = (args, filePath, line) => {
     let presenceFn = (raw, args) => {
         return args.filter(v => {
-            if (findFn(v, raw) && hasNotExtractionWithRegExpFlag(v)) {
+            if (findAndHasNotFlags(v, raw)) {
                 return v;
             } if (findFn(v, raw) && (v !== _extractFlag)) {
                 return v;

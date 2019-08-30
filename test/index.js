@@ -15,6 +15,10 @@ describe('Nap text searcher', () => {
     it('count some times the content appears', () => {
         assert.equal(nap.count('sample', 'sample some sample'), 2);
     });
+
+    it('find and has not verified flags', () => {
+        assert.ok(nap.findAndHasNotFlags('love', 'i love grapes'));
+    });
 });
 
 describe('Nap text extractor', () => {
