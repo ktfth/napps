@@ -30,7 +30,11 @@ describe('Nap flags', () => {
 
     it('regular expression', () => {
         assert.equal(nap.regularExpressionFlag, '--re');
-    })
+    });
+
+    it('has not extraction with regexp flag function', () => {
+        assert.ok(nap.hasNotExtractionWithRegExpFlag('--other'));
+    });
 });
 
 describe('Nap transform', () => {
