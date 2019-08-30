@@ -104,20 +104,16 @@ let searchDataTransformFn = (args, filePath, line) => {
             } else if (hasExtractFlagWithPresence(args, presence)) {
                 if (args.indexOf(_regularExpressionFlag) === -1) {
                     presence = presence.map(v => extractFn(v, raw));
-                } else if (args.indexOf(_regularExpressionFlag > -1)) {
+                } if (args.indexOf(_regularExpressionFlag > -1) && presenceRegexp !== undefined) {
                     presence = presenceRegexp.map((v, i) => {
                         let out = '';
                         let matchingCase = raw.match(v);
                         out = matchingCase[0] + ' (' + matchingCase.input + ')'
                         return out;
                     });
-                }
-
-                if (process.stdin.isTTY) {
+                } if (process.stdin.isTTY) {
                     this.push(Buffer.from(filePath + ':' + line + '\n' + presence.join('\n')) + '\n');
-                }
-
-                if (!process.stdin.isTTY) {
+                } if (!process.stdin.isTTY) {
                     this.push(Buffer.from(presence.join('\n')) + '\n');
                 }
             }
