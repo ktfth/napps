@@ -63,7 +63,7 @@ let searchDataTransformFn = (args, filePath, line) => {
         });
     };
 
-    let hasExtractFlagWithPresence = (args, presence) => {
+    let hasNotExtractFlagWithPresence = (args, presence) => {
         return args.indexOf(_extractFlag) === -1 && (presence.length);
     };
 
@@ -76,7 +76,7 @@ let searchDataTransformFn = (args, filePath, line) => {
                 presenceRegexp = presence.map(v => {
                     return new RegExp(v);
                 });
-            } if (hasExtractFlagWithPresence(args, presence)) {
+            } if (hasNotExtractFlagWithPresence(args, presence)) {
                     presence = presence.map(v => v + ' (' + countFn(v, raw) + ')')
                     if (process.stdin.isTTY) {
                         this.push(Buffer.from(filePath + ':' + line + '\n' + presence.join('\n') + '\n'));
