@@ -176,9 +176,9 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
                         out = matchingCase[0] + ' (' + matchingCase.input + ')'
                         return out;
                     });
+                } if (presence.filter(v => v !== '').length) {
+                    this.push(Buffer.from(filePath + '\n' + presence.join('\n')) + '\n');
                 }
-
-                this.push(Buffer.from(filePath + '\n' + presence.join('\n')) + '\n');
             }
 
             callback();
