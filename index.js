@@ -106,10 +106,8 @@ let searchDataTransformFn = (args, filePath, line) => {
             if (hasNotExtractFlagWithPresence(args, presence)) {
                     presence = presence.map(v => v + ' (' + countFn(v, raw) + ')')
                     if (process.stdin.isTTY) {
-                        this.push(Buffer.from(filePath + ':' + line + '\n' + presence.join('\n') + '\n'));
-                    }
-
-                    if (!process.stdin.isTTY) {
+                        this.push(Buffer.from(filePath + '\n' + presence.join('\n') + '\n'));
+                    } if (!process.stdin.isTTY) {
                         this.push(Buffer.from(presence.join('\n')) + '\n');
                     }
             } else if (hasExtractFlagWithPresence(args, presence)) {
@@ -123,7 +121,7 @@ let searchDataTransformFn = (args, filePath, line) => {
                         return out;
                     });
                 } if (process.stdin.isTTY) {
-                    this.push(Buffer.from(filePath + ':' + line + '\n' + presence.join('\n')) + '\n');
+                    this.push(Buffer.from(filePath + '\n' + presence.join('\n')) + '\n');
                 } if (!process.stdin.isTTY) {
                     this.push(Buffer.from(presence.join('\n')) + '\n');
                 }
