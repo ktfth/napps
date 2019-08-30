@@ -33,14 +33,9 @@ if (isPipe) {
             for (let i = 0, l = _cacheDirectory.length; i < l; i += 1) {
               let file = _cacheDirectory[i];
               let filePath = path.resolve(dir, file.name);
-              let line = i + 1;
-              fs.readFile(filePath, (err, data) => {
-                  if (!err) {
-                    fs.createReadStream(filePath)
-                      .pipe(nap.searchDataTransform(args, filePath, line))
-                      .pipe(process.stdout);
-                  }
-              });
+              fs.createReadStream(filePath)
+                .pipe(nap.searchDataTransform(args, filePath))
+                .pipe(process.stdout);
             }
 
             if (limit < 10) {
