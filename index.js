@@ -135,3 +135,54 @@ let searchDataTransformFn = (args, filePath, line) => {
     });
 };
 exports.searchDataTransform = searchDataTransformFn;
+
+let traversalSearchDataTransformFn = (args, filePath, line) => {
+    let presenceFn = (raw, args) => {
+        return args.filter(v => {
+            if (v.indexOf('--') === -1) {
+              return v;
+            } if (findAndHasNotFlags(v, raw)) {
+                return v;
+            } if (findAndHasNotFlag(v, raw)) {
+                return v;
+            }
+        });
+    };
+
+    let prepareRegExpPresence = (args, presence) => {
+      if (hasRegExpFlagInArgs(args) && (presence.length)) {
+          presenceRegexp = presence.map(v => {
+              return new RegExp(v);
+          });
+      }
+    };
+
+    return new Transform({
+        transform(chunk, encoding, callback) {
+            let raw = chunk.toString();
+            let presence = presenceFn(raw, args);
+            let presenceRegexp = prepareRegExpPresence(args, presence);
+
+            if (hasNotExtractFlagWithPresence(args, presence)) {
+                    presence = presence.map(v => v + ' (' + countFn(v, raw) + ')')
+                    this.push(Buffer.from(filePath + '\n' + presence.join('\n') + '\n'));
+            } else if (hasExtractFlagWithPresence(args, presence)) {
+                if (hasNotRegExpFlag(args)) {
+                    presence = presence.map(v => extractFn(v, raw));
+                } if (hasRegExpFlagAndRegExpMap(args, presenceRegexp)) {
+                    presence = presenceRegexp.map((v, i) => {
+                        let out = '';
+                        let matchingCase = raw.match(v);
+                        out = matchingCase[0] + ' (' + matchingCase.input + ')'
+                        return out;
+                    });
+                }
+
+                this.push(Buffer.from(filePath + '\n' + presence.join('\n')) + '\n');
+            }
+
+            callback();
+        }
+    });
+};
+exports.traversalSearchDataTransform = traversalSearchDataTransformFn;

@@ -34,7 +34,7 @@ if (isPipe) {
               let file = _cacheDirectory[i];
               let filePath = path.resolve(dir, file.name);
               fs.createReadStream(filePath)
-                .pipe(nap.searchDataTransform(args, filePath))
+                .pipe(nap.traversalSearchDataTransform(args, filePath))
                 .pipe(process.stdout);
             }
 

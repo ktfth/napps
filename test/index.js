@@ -74,8 +74,14 @@ describe('Nap flags', () => {
     });
 });
 
-describe('Nap transform', () => {
+describe('Nap search transform', () => {
     it('instantiation across function', () => {
         assert.ok(nap.searchDataTransform([]) instanceof Transform);
+    });
+});
+
+describe('Nap traversal search transform', () => {
+    it('instantiation across function', () => {
+        assert.ok(nap.traversalSearchDataTransform([]) instanceof Transform);
     });
 });
