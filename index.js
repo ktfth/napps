@@ -24,7 +24,7 @@ const _regularExpressionFlag = '--re';
 exports.regularExpressionFlag = _regularExpressionFlag;
 
 let searchDataTransformFn = (args, filePath, line) => {
-    let presenceFn = () => {
+    let presenceFn = (raw) => {
         return args.filter(v => {
             if (findFn(v, raw) && (v !== _extractFlag && v !== _regularExpressionFlag)) {
                 return v;
@@ -37,7 +37,7 @@ let searchDataTransformFn = (args, filePath, line) => {
     return new Transform({
         transform(chunk, encoding, callback) {
             let raw = chunk.toString();
-            let presence = presenceFn();
+            let presence = presenceFn(raw);
             let presenceRegexp = [];
             if (args.indexOf(_regularExpressionFlag) > -1 && (presence.length)) {
                 presenceRegexp = presence.map(v => {
