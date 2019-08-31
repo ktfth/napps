@@ -19,7 +19,7 @@ if (isPipe) {
 } else if ((!isPipe && (isTTY)) && args.length) {
     // searchData = nap.searchDataTransform(args);
     let traversalSearch = (dir, dirs=[]) => {
-        let limit = 0
+        let limit = 0;
         let directory = fs.readdirSync(dir, {
             withFileTypes: true
         });
