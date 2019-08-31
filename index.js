@@ -24,6 +24,10 @@ exports.extractFlag = _extractFlag;
 const _regularExpressionFlag = '--re';
 exports.regularExpressionFlag = _regularExpressionFlag;
 
+let hasExtractFlag = v => {
+    return v === _extractFlag;
+};
+
 let hasNotExtraction = v => {
     return v !== _extractFlag;
 };
@@ -107,6 +111,15 @@ let searchDataTransformFn = (args, filePath, line) => {
             let presence = presenceFn(raw, args);
             let presenceRegexp = prepareRegExpPresence(args, presence);
 
+            let filterReFlag = (presence) => {
+              presence = presence.filter(v => {
+                  if (!(v.indexOf('--') === 0)) {
+                    return v;
+                  }
+              });
+              return presence;
+            }
+
             let resumePresenceCounterMap = (raw) => {
                 return presence.map(v => v + ' (' + countFn(v, raw) + ')');
             };
@@ -154,6 +167,8 @@ let searchDataTransformFn = (args, filePath, line) => {
                 }
             };
 
+            presence = filterReFlag(presence);
+
             resumeCounter(args, presence, raw);
             resumeExtraction(args, presence, presenceRegexp, raw);
 
@@ -175,6 +190,15 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
             }
         });
     };
+
+    let filterReFlag = (presence) => {
+      presence = presence.filter(v => {
+          if (!(v.indexOf('--') === 0)) {
+            return v;
+          }
+      });
+      return presence;
+    }
 
     let prepareRegExpPresence = (args, presence) => {
       if (hasRegExpFlagInArgs(args) && (presence.length)) {
@@ -224,6 +248,8 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
                     }
                 }
             };
+
+            presence = filterReFlag(presence);
 
             resumeCounter(args, presence, raw);
             resumeExtraction(args, presence, presenceRegexp, raw);
