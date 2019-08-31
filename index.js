@@ -133,7 +133,9 @@ let searchDataTransformFn = (args, filePath, line) => {
             let resumeCounter = (args, presence, raw) => {
                 if (hasNotExtractFlagWithPresence(args, presence)) {
                     presence = resumePresenceCounterMap(raw);
-                    self.push(bufferContentByPresence(presence));
+                    if (presence.length) {
+                        self.push(bufferContentByPresence(presence));
+                    }
                 }
             };
 
