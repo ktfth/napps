@@ -99,7 +99,7 @@ let searchDataTransformFn = (args, filePath, line) => {
     let prepareRegExpPresence = (args, presence) => {
       if (hasRegExpFlagInArgs(args) && (presence.length)) {
           presenceRegexp = presence.map(v => {
-              return new RegExp(v);
+              return new RegExp(v, 'g');
           });
       }
     };
@@ -203,7 +203,7 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
     let prepareRegExpPresence = (args, presence) => {
       if (hasRegExpFlagInArgs(args) && (presence.length)) {
           presenceRegexp = presence.map(v => {
-              return new RegExp(v);
+              return new RegExp(v, 'g');
           });
       }
     };
