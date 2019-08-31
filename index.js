@@ -102,33 +102,43 @@ let searchDataTransformFn = (args, filePath, line) => {
 
     return new Transform({
         transform(chunk, encoding, callback) {
+            let self = this;
             let raw = chunk.toString();
             let presence = presenceFn(raw, args);
             let presenceRegexp = prepareRegExpPresence(args, presence);
 
-            if (hasNotExtractFlagWithPresence(args, presence)) {
+            let resumeCounter = (args, presence, raw) => {
+                if (hasNotExtractFlagWithPresence(args, presence)) {
                     presence = presence.map(v => v + ' (' + countFn(v, raw) + ')')
-                    if (process.stdin.isTTY) {
-                        this.push(Buffer.from(filePath + '\n' + presence.join('\n') + '\n'));
-                    } if (!process.stdin.isTTY) {
-                        this.push(Buffer.from(presence.join('\n')) + '\n');
-                    }
-            } else if (hasExtractFlagWithPresence(args, presence)) {
+                    self.push(Buffer.from(presence.join('\n')) + '\n');
+                }
+            };
+
+            resumeCounter(args, presence, raw);
+
+            let extractFragment = (presence, raw) => {
                 if (hasNotRegExpFlag(args)) {
                     presence = presence.map(v => extractFn(v, raw));
-                } if (hasRegExpFlagAndRegExpMap(args, presenceRegexp)) {
-                    presence = presenceRegexp.map((v, i) => {
-                        let out = '';
-                        let matchingCase = raw.match(v);
-                        out = matchingCase[0] + ' (' + matchingCase.input + ')'
-                        return out;
-                    });
-                } if (process.stdin.isTTY) {
-                    this.push(Buffer.from(filePath + '\n' + presence.join('\n')) + '\n');
-                } if (!process.stdin.isTTY) {
+                }
+                return presence;
+            };
+
+            let resumeExtraction = (args, presence, presenceRegexp, raw) => {
+                if (hasExtractFlagWithPresence(args, presence)) {
+                    presence = extractFragment(presence, raw);
+                    if (hasRegExpFlagAndRegExpMap(args, presenceRegexp)) {
+                        presence = presenceRegexp.map((v, i) => {
+                            let out = '';
+                            let matchingCase = raw.match(v);
+                            out = matchingCase[0] + ' (' + matchingCase.input + ')'
+                            return out;
+                        });
+                    }
                     this.push(Buffer.from(presence.join('\n')) + '\n');
                 }
-            }
+            };
+
+            resumeExtraction(args, presence, presenceRegexp, raw);
 
             callback();
         }
