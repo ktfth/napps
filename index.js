@@ -193,8 +193,8 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
 
             let resumeCounter = (args, presence, raw) => {
                 if (hasNotExtractFlagWithPresence(args, presence)) {
-                        presence = countPresenceMap(presence, raw);
-                        self.push(Buffer.from(filePath + '\n' + presence.join('\n') + '\n'));
+                    presence = countPresenceMap(presence, raw);
+                    self.push(Buffer.from(filePath + '\n' + presence.join('\n') + '\n'));
                 }
             };
 
