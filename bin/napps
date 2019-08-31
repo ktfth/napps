@@ -8,6 +8,8 @@ const args = process.argv.slice(2);
 const nap = require('../');
 let searchData = null;
 
+process.stdin.setEncoding('utf8');
+
 if (isPipe) {
     searchData = nap.searchDataTransform(args);
     process.stdin.pipe(searchData).pipe(process.stdout);
