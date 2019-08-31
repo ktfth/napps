@@ -111,10 +111,15 @@ let searchDataTransformFn = (args, filePath, line) => {
                 return presence.map(v => v + ' (' + countFn(v, raw) + ')');
             };
 
+            let bufferContentByPresence = (presence) => {
+                let content = presence.join('\n') + '\n';
+                return Buffer.from(content);
+            };
+
             let resumeCounter = (args, presence, raw) => {
                 if (hasNotExtractFlagWithPresence(args, presence)) {
                     presence = resumePresenceCounterMap(raw);
-                    self.push(Buffer.from(presence.join('\n')) + '\n');
+                    self.push(bufferContentByPresence(presence));
                 }
             };
 
@@ -143,7 +148,7 @@ let searchDataTransformFn = (args, filePath, line) => {
                     presence = extractRegExpFragment(args, presence, presenceRegexp);
                     presence = presence.filter(v => v !== '');
                     if (presence.length) {
-                      self.push(Buffer.from(presence.join('\n')) + '\n');
+                      self.push(bufferContentByPresence(presence));
                     }
                     process.exit(0);
                 }
