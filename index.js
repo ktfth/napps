@@ -201,11 +201,7 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
     };
 
     let filterReFlag = (presence) => {
-      presence = presence.filter(v => {
-          if (!(v.indexOf('--') === 0)) {
-            return v;
-          }
-      });
+      presence = filterFragments(presence);
       return presence;
     }
 
