@@ -35,9 +35,11 @@ if (isPipe) {
               let filePath = path.resolve(dir, file.name);
               let excludes = args.filter(v => {
                   if (v.indexOf('--exclude') > -1) {
-                    return v.split('=');
+                    return v;
                   }
               });
+
+              excludes = excludes.map(v => v.split('='));
 
               excludes.map(v => {
                   if (filePath.indexOf(v[1]) === -1) {
