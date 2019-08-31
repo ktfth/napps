@@ -33,9 +33,19 @@ if (isPipe) {
             for (let i = 0, l = _cacheDirectory.length; i < l; i += 1) {
               let file = _cacheDirectory[i];
               let filePath = path.resolve(dir, file.name);
-              fs.createReadStream(filePath)
-                .pipe(nap.traversalSearchDataTransform(args, filePath))
-                .pipe(process.stdout);
+              let excludes = args.filter(v => {
+                  if (v.indexOf('--exclude') > -1) {
+                    return v.split('=');
+                  }
+              });
+
+              excludes.map(v => {
+                  if (filePath.indexOf(v[1]) === -1) {
+                    fs.createReadStream(filePath)
+                      .pipe(nap.traversalSearchDataTransform(args, filePath))
+                      .pipe(process.stdout);
+                  }
+              });
             }
 
             if (limit < 10) {
