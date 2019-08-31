@@ -1,6 +1,6 @@
 {
   "name": "napps",
-  "version": "1.4.3",
+  "version": "1.4.5",
   "description": "Text searcher",
   "bin": "./bin/napps",
   "main": "index.js",
