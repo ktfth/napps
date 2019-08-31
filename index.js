@@ -181,14 +181,20 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
 
     return new Transform({
         transform(chunk, encoding, callback) {
+            let self = this;
             let raw = chunk.toString();
             let presence = presenceFn(raw, args);
             let presenceRegexp = prepareRegExpPresence(args, presence);
 
+            let countPresenceMap = (presence, raw) => {
+              let ctr = countFn(v, raw);
+                return presence.map(v => v + ' (' + ctr + ')');
+            };
+
             let resumeCounter = (args, presence, raw) => {
                 if (hasNotExtractFlagWithPresence(args, presence)) {
-                        presence = presence.map(v => v + ' (' + countFn(v, raw) + ')')
-                        this.push(Buffer.from(filePath + '\n' + presence.join('\n') + '\n'));
+                        presence = countPresenceMap(presence, raw);
+                        self.push(Buffer.from(filePath + '\n' + presence.join('\n') + '\n'));
                 }
             };
 
@@ -206,7 +212,7 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
                             return out;
                         });
                     } if (presence.filter(v => v !== '').length) {
-                        this.push(Buffer.from(filePath + '\n' + presence.join('\n')) + '\n');
+                        self.push(Buffer.from(filePath + '\n' + presence.join('\n')) + '\n');
                     }
                 }
             };
