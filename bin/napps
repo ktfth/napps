@@ -45,6 +45,12 @@ if (isPipe) {
 
               excludes = excludes.map(v => v.split('='));
 
+              if (!excludes.length) {
+                fs.createReadStream(filePath)
+                  .pipe(nap.traversalSearchDataTransform(args, filePath))
+                  .pipe(process.stdout);
+              }
+
               excludes.map(v => {
                   if (filePath.indexOf(v[1]) === -1) {
                     fs.createReadStream(filePath)

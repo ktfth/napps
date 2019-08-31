@@ -121,7 +121,8 @@ let searchDataTransformFn = (args, filePath, line) => {
             }
 
             let resumePresenceCounterMap = (raw) => {
-                return presence.map(v => v + ' (' + countFn(v, raw) + ')');
+                let ctr = (v) => countFn(v, raw);
+                return presence.filter(v => ctr(v) > 0).map(v => v + ' (' + ctr(v) + ')');
             };
 
             let bufferContentByPresence = (presence) => {
@@ -217,7 +218,7 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
 
             let countPresenceMap = (presence, raw) => {
                 let ctr = (v) => countFn(v, raw);
-                return presence.map(v => v + ' (' + ctr(v) + ')');
+                return presence.filter(v => ctr(v) > 0).map(v => v + ' (' + ctr(v) + ')');
             };
 
             let bufferContentByFile = (filePath, presence) => {
@@ -228,7 +229,9 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
             let resumeCounter = (args, presence, raw) => {
                 if (hasNotExtractFlagWithPresence(args, presence)) {
                     presence = countPresenceMap(presence, raw);
-                    self.push(bufferContentByFile(filePath, presence));
+                    if (presence.length) {
+                        self.push(bufferContentByFile(filePath, presence));
+                    }
                 }
             };
 
