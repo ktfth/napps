@@ -139,7 +139,7 @@ let searchDataTransformFn = (args, filePath, line) => {
                 if (hasExtractFlagWithPresence(args, presence)) {
                     presence = extractFragment(presence, raw);
                     presence = extractRegExpFragment(args, presence, presenceRegexp);
-                    this.push(Buffer.from(presence.join('\n')) + '\n');
+                    self.push(Buffer.from(presence.join('\n')) + '\n');
                 }
             };
 
