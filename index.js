@@ -86,6 +86,13 @@ let hasRegExpFlagAndRegExpMap = (args, presenceRegexp) => {
 };
 exports.hasRegExpFlagAndRegExpMap = hasRegExpFlagAndRegExpMap;
 
+let filterFragments = (args) => {
+    return args.filter(v => {
+        return !(v.indexOf('--') === 0);
+    });
+};
+exports.filterFragments = filterFragments;
+
 let searchDataTransformFn = (args, filePath, line) => {
     let presenceFn = (raw, args) => {
         return args.filter(v => {
@@ -115,11 +122,7 @@ let searchDataTransformFn = (args, filePath, line) => {
             let presenceRegexp = prepareRegExpPresence(args, presence);
 
             let filterReFlag = (presence) => {
-              presence = presence.filter(v => {
-                  if (!(v.indexOf('--') === 0)) {
-                    return v;
-                  }
-              });
+              presence = filterFragments(presence);
               return presence;
             }
 

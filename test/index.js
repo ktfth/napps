@@ -89,3 +89,9 @@ describe('Nap traversal search transform', () => {
         assert.ok(nap.traversalSearchDataTransform([]) instanceof Transform);
     });
 });
+
+describe('Nap essentials', () => {
+    it('filter fragments', () => {
+        assert.deepEqual(nap.filterFragments(['--extract', 'test']), ['test']);
+    });
+});
