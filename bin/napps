@@ -38,7 +38,7 @@ if (isPipe) {
               let file = _cacheDirectory[i];
               let filePath = path.resolve(dir, file.name);
               let excludes = args.filter(v => {
-                  if (v.indexOf('--exclude') > -1) {
+                  if (v.indexOf(nap.excludeFlag) > -1) {
                     return v;
                   }
               });

@@ -72,6 +72,10 @@ describe('Nap flags', () => {
     it('has not regexp flag', () => {
         assert.ok(nap.hasNotRegExpFlag(['--other']));
     });
+
+    it('exclude flag', () => {
+        assert.equal(nap.excludeFlag, '--exclude');
+    })
 });
 
 describe('Nap search transform', () => {
