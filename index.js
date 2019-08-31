@@ -194,20 +194,24 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
 
             resumeCounter(args, presence, raw);
 
-            if (hasExtractFlagWithPresence(args, presence)) {
-                if (hasNotRegExpFlag(args)) {
-                    presence = presence.map(v => extractFn(v, raw));
-                } if (hasRegExpFlagAndRegExpMap(args, presenceRegexp)) {
-                    presence = presenceRegexp.map((v, i) => {
-                        let out = '';
-                        let matchingCase = raw.match(v);
-                        out = matchingCase[0] + ' (' + matchingCase.input + ')'
-                        return out;
-                    });
-                } if (presence.filter(v => v !== '').length) {
-                    this.push(Buffer.from(filePath + '\n' + presence.join('\n')) + '\n');
+            let resumeExtraction = (args, presence, presenceRegexp, raw) => {
+                if (hasExtractFlagWithPresence(args, presence)) {
+                    if (hasNotRegExpFlag(args)) {
+                        presence = presence.map(v => extractFn(v, raw));
+                    } if (hasRegExpFlagAndRegExpMap(args, presenceRegexp)) {
+                        presence = presenceRegexp.map((v, i) => {
+                            let out = '';
+                            let matchingCase = raw.match(v);
+                            out = matchingCase[0] + ' (' + matchingCase.input + ')'
+                            return out;
+                        });
+                    } if (presence.filter(v => v !== '').length) {
+                        this.push(Buffer.from(filePath + '\n' + presence.join('\n')) + '\n');
+                    }
                 }
-            }
+            };
+
+            resumeExtraction(args, presence, presenceRegexp, raw);
 
             callback();
         }
