@@ -123,17 +123,22 @@ let searchDataTransformFn = (args, filePath, line) => {
                 return presence;
             };
 
+            let extractRegExpFragment = (args, presence, presenceRegexp) => {
+                if (hasRegExpFlagAndRegExpMap(args, presenceRegexp)) {
+                    presence = presenceRegexp.map((v, i) => {
+                        let out = '';
+                        let matchingCase = raw.match(v);
+                        out = matchingCase[0] + ' (' + matchingCase.input + ')'
+                        return out;
+                    });
+                }
+                return presence;
+            };
+
             let resumeExtraction = (args, presence, presenceRegexp, raw) => {
                 if (hasExtractFlagWithPresence(args, presence)) {
                     presence = extractFragment(presence, raw);
-                    if (hasRegExpFlagAndRegExpMap(args, presenceRegexp)) {
-                        presence = presenceRegexp.map((v, i) => {
-                            let out = '';
-                            let matchingCase = raw.match(v);
-                            out = matchingCase[0] + ' (' + matchingCase.input + ')'
-                            return out;
-                        });
-                    }
+                    presence = extractRegExpFragment(args, presence, presenceRegexp);
                     this.push(Buffer.from(presence.join('\n')) + '\n');
                 }
             };
