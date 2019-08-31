@@ -185,10 +185,16 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
             let presence = presenceFn(raw, args);
             let presenceRegexp = prepareRegExpPresence(args, presence);
 
-            if (hasNotExtractFlagWithPresence(args, presence)) {
-                    presence = presence.map(v => v + ' (' + countFn(v, raw) + ')')
-                    this.push(Buffer.from(filePath + '\n' + presence.join('\n') + '\n'));
-            } else if (hasExtractFlagWithPresence(args, presence)) {
+            let resumeCounter = (args, presence, raw) => {
+                if (hasNotExtractFlagWithPresence(args, presence)) {
+                        presence = presence.map(v => v + ' (' + countFn(v, raw) + ')')
+                        this.push(Buffer.from(filePath + '\n' + presence.join('\n') + '\n'));
+                }
+            };
+
+            resumeCounter(args, presence, raw);
+
+            if (hasExtractFlagWithPresence(args, presence)) {
                 if (hasNotRegExpFlag(args)) {
                     presence = presence.map(v => extractFn(v, raw));
                 } if (hasRegExpFlagAndRegExpMap(args, presenceRegexp)) {
