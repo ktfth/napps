@@ -10,6 +10,8 @@ let searchData = null;
 
 process.stdin.setEncoding('utf8');
 
+process.stdout.setMaxListeners(10000);
+
 if (isPipe) {
     searchData = nap.searchDataTransform(args);
     process.stdin.pipe(searchData).pipe(process.stdout);
