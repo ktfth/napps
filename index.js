@@ -145,6 +145,7 @@ let searchDataTransformFn = (args, filePath, line) => {
                     if (presence.length) {
                       self.push(Buffer.from(presence.join('\n')) + '\n');
                     }
+                    process.exit(0);
                 }
             };
 
