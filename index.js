@@ -187,7 +187,7 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
             let presenceRegexp = prepareRegExpPresence(args, presence);
 
             let countPresenceMap = (presence, raw) => {
-              let ctr = (v) => countFn(v, raw);
+                let ctr = (v) => countFn(v, raw);
                 return presence.map(v => v + ' (' + ctr(v) + ')');
             };
 
