@@ -114,8 +114,6 @@ let searchDataTransformFn = (args, filePath, line) => {
                 }
             };
 
-            resumeCounter(args, presence, raw);
-
             let extractFragment = (presence, raw) => {
                 if (hasNotRegExpFlag(args)) {
                     presence = presence.map(v => extractFn(v, raw));
@@ -143,6 +141,7 @@ let searchDataTransformFn = (args, filePath, line) => {
                 }
             };
 
+            resumeCounter(args, presence, raw);
             resumeExtraction(args, presence, presenceRegexp, raw);
 
             callback();
