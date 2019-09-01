@@ -17,6 +17,11 @@ if (isPipe) {
     process.stdin.pipe(searchData).pipe(process.stdout);
     process.stdin.resume();
 } else if ((!isPipe && (isTTY)) && args.length) {
+    let filterDirectory = directory => {
+      return directory.filter(dirent => {
+          return dirent.isFile() && !(dirent.name.indexOf('.') === 0);
+      });
+    };
     // searchData = nap.searchDataTransform(args);
     let traversalSearch = (dir, dirs=[]) => {
         let limit = 0;
@@ -26,9 +31,7 @@ if (isPipe) {
         let _cacheDirectory = [];
         let _cacheDirectories = dirs;
         if (directory) {
-            _cacheDirectory = directory.filter(dirent => {
-                return dirent.isFile() && !(dirent.name.indexOf('.') === 0);
-            });
+            _cacheDirectory = filterDirectory(directory);
 
             _cacheDirectories = directory.filter(dirent => {
                 return dirent.isDirectory() && !(dirent.name.indexOf('.') === 0);
