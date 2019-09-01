@@ -20,3 +20,17 @@ sample (1)
 ```
 cat sample.txt | napps sample --extract
 ```
+
+```
+napps test --extract --exclude=txt
+```
+
+```
+napps test --extract --exclude=txt --rev
+```
+
+## Contribute
+
+### Information
+
+Contact across issues or by email Kaique da Silva <kaeyosthaeron@gmail.com>
