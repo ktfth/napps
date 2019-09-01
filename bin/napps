@@ -22,6 +22,12 @@ if (isPipe) {
           return dirent.isFile() && !(dirent.name.indexOf('.') === 0);
       });
     };
+
+    let filterIsDirectory = directory => {
+        return directory.filter(dirent => {
+            return dirent.isDirectory() && !(dirent.name.indexOf('.') === 0);
+        });
+    };
     // searchData = nap.searchDataTransform(args);
     let traversalSearch = (dir, dirs=[]) => {
         let limit = 0;
@@ -33,9 +39,7 @@ if (isPipe) {
         if (directory) {
             _cacheDirectory = filterDirectory(directory);
 
-            _cacheDirectories = directory.filter(dirent => {
-                return dirent.isDirectory() && !(dirent.name.indexOf('.') === 0);
-            });
+            _cacheDirectories = filterIsDirectory(directory);
 
             for (let i = 0, l = _cacheDirectory.length; i < l; i += 1) {
               let file = _cacheDirectory[i];
