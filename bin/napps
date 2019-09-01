@@ -21,7 +21,7 @@ if (isPipe) {
 
     let filterIsDirectory = nap.filterIsDirectory;
 
-    let filterExclude = nap.filterExclude(args);
+    let filterExclude = nap.filterExclude;
 
     let excludesMap = excludes => {
       return excludes.map(v => v.split(_argSep));
