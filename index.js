@@ -112,6 +112,11 @@ let filterExclude = args => {
 };
 exports.filterExclude = filterExclude;
 
+let excludesMap = excludes => {
+    return excludes.map(v => v.split(_argSep));
+};
+exports.excludesMap = excludesMap;
+
 let filterFragments = (args) => {
     return args.filter(v => {
         return !(v.indexOf('--') === 0);
