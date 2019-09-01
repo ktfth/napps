@@ -19,11 +19,7 @@ if (isPipe) {
 } else if ((!isPipe && (isTTY)) && args.length) {
     let filterDirectory = nap.filterDirectory;
 
-    let filterIsDirectory = directory => {
-        return directory.filter(dirent => {
-            return dirent.isDirectory() && !(dirent.name.indexOf('.') === 0);
-        });
-    };
+    let filterIsDirectory = nap.filterIsDiretory;
 
     let filterExclude = args => {
       return args.filter(v => {

@@ -1,5 +1,6 @@
 const fs = require('fs');
 const nap = require('../');
+const path = require('path');
 const assert = require('assert');
 
 const { Transform } = require('stream');
@@ -101,9 +102,18 @@ describe('Nap essentials', () => {
     });
 
     it('filter directory', () => {
-        let dirs = fs.readdirSync('./', {
-          withFileTypes: true
+        let dirsPath = path.resolve(process.cwd(), 'test');
+        let dirs = fs.readdirSync(dirsPath, {
+            withFileTypes: true
         });
         assert.ok(nap.filterDirectory(dirs).length > 0);
+    });
+
+    it('filter is directory', () => {
+        let dirsPath = path.resolve(process.cwd(), 'test');
+        let dirs = fs.readdirSync(dirsPath, {
+            withFileTypes: true
+        });
+        assert.ok(nap.filterIsDirectory(dirs).length > 0);
     });
 });

@@ -96,6 +96,13 @@ let filterDirectory = directory => {
 };
 exports.filterDirectory = filterDirectory;
 
+let filterIsDirectory = directory => {
+    return directory.filter(dirent => {
+        return dirent.isDirectory() && !(dirent.name.indexOf('.') === 0);
+    });
+};
+exports.filterIsDirectory = filterIsDirectory;
+
 let filterFragments = (args) => {
     return args.filter(v => {
         return !(v.indexOf('--') === 0);
