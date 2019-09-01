@@ -148,7 +148,7 @@ let searchDataTransformFn = (args, filePath, line) => {
     return new Transform({
         transform(raw, encoding, callback) {
             let self = this;
-            // let raw = chunk.toString();
+            let rev = args.indexOf('--rev') > -1;
             let presence = presenceFn(raw, args);
             let presenceRegexp = prepareRegExpPresence(args, presence);
 
@@ -164,6 +164,9 @@ let searchDataTransformFn = (args, filePath, line) => {
 
             let bufferContentByPresence = (presence) => {
                 let content = presence.join('\n') + '\n';
+                if (!hasNotExtractFlagWithPresence(args, presence) && rev) {
+                  content = content.split('').reverse().join('');
+                }
                 return Buffer.from(content);
             };
 
@@ -247,6 +250,7 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
     return new Transform({
         transform(raw, encoding, callback) {
             let self = this;
+            let rev = args.indexOf('--rev') > -1;
             let presence = presenceFn(raw, args);
             let presenceRegexp = prepareRegExpPresence(args, presence);
 
@@ -257,6 +261,9 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
 
             let bufferContentByFile = (filePath, presence) => {
                 let content = filePath + '\n' + presence.join('\n') + '\n';
+                if (!hasNotExtractFlagWithPresence(args, presence) && rev) {
+                  content = content.split('').reverse().join('');
+                }
                 return Buffer.from(content);
             };
 
