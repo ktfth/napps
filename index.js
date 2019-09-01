@@ -5,7 +5,7 @@ exports.find = findFn;
 
 let countFn = (v, content) => {
     let out = 0;
-    out = content.match(new RegExp(v, 'ig'));
+    out = content.toString().match(new RegExp(v, 'ig'));
     out = out === null ? 0 : out.length;
     return out;
 };
@@ -13,7 +13,7 @@ exports.count = countFn;
 
 let extractFn = (v, content) => {
     let out = '';
-    out = content.split('\n').filter(l => findFn(v, l)).join('\n');
+    out = content.toString().split('\n').filter(l => findFn(v, l)).join('\n');
     return out;
 };
 exports.extract = extractFn;
@@ -245,9 +245,8 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
     };
 
     return new Transform({
-        transform(chunk, encoding, callback) {
+        transform(raw, encoding, callback) {
             let self = this;
-            let raw = chunk.toString();
             let presence = presenceFn(raw, args);
             let presenceRegexp = prepareRegExpPresence(args, presence);
 
