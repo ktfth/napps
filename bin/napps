@@ -47,7 +47,19 @@ if (isPipe) {
             .pipe(nap.traversalSearchDataTransform(args, filePath))
             .pipe(process.stdout);
         }
-    }
+    };
+
+    let mulPipeline = (args, filePath, excludes) => {
+        return excludes.map(v => {
+            if (filePath.indexOf(v[1]) === -1) {
+              fs.createReadStream(filePath)
+                .pipe(nap.traversalSearchDataTransform(args, filePath))
+                .pipe(process.stdout);
+            }
+
+            return v;
+        });
+    };
     // searchData = nap.searchDataTransform(args);
     let traversalSearch = (dir, dirs=[]) => {
         let limit = 0;
@@ -69,14 +81,7 @@ if (isPipe) {
               excludes = excludesMap(excludes);
 
               singlePipeline(args, filePath, excludes);
-
-              excludes.map(v => {
-                  if (filePath.indexOf(v[1]) === -1) {
-                    fs.createReadStream(filePath)
-                      .pipe(nap.traversalSearchDataTransform(args, filePath))
-                      .pipe(process.stdout);
-                  }
-              });
+              mulPipeline(args, filePath, excludes);
             }
 
             if (limit < 10) {
