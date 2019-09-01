@@ -40,6 +40,14 @@ if (isPipe) {
     let excludesMap = excludes => {
       return excludes.map(v => v.split(_argSep));
     };
+
+    let singlePipeline = (args, filePath, excludes) => {
+        if (!excludes.length) {
+          fs.createReadStream(filePath)
+            .pipe(nap.traversalSearchDataTransform(args, filePath))
+            .pipe(process.stdout);
+        }
+    }
     // searchData = nap.searchDataTransform(args);
     let traversalSearch = (dir, dirs=[]) => {
         let limit = 0;
@@ -60,11 +68,7 @@ if (isPipe) {
 
               excludes = excludesMap(excludes);
 
-              if (!excludes.length) {
-                fs.createReadStream(filePath)
-                  .pipe(nap.traversalSearchDataTransform(args, filePath))
-                  .pipe(process.stdout);
-              }
+              singlePipeline(args, filePath, excludes);
 
               excludes.map(v => {
                   if (filePath.indexOf(v[1]) === -1) {
