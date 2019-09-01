@@ -146,9 +146,9 @@ let searchDataTransformFn = (args, filePath, line) => {
     };
 
     return new Transform({
-        transform(chunk, encoding, callback) {
+        transform(raw, encoding, callback) {
             let self = this;
-            let raw = chunk.toString();
+            // let raw = chunk.toString();
             let presence = presenceFn(raw, args);
             let presenceRegexp = prepareRegExpPresence(args, presence);
 
