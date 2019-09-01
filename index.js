@@ -89,6 +89,13 @@ let hasRegExpFlagAndRegExpMap = (args, presenceRegexp) => {
 };
 exports.hasRegExpFlagAndRegExpMap = hasRegExpFlagAndRegExpMap;
 
+let filterDirectory = directory => {
+    return directory.filter(dirent => {
+        return dirent.isFile() && !(dirent.name.indexOf('.') === 0);
+    });
+};
+exports.filterDirectory = filterDirectory;
+
 let filterFragments = (args) => {
     return args.filter(v => {
         return !(v.indexOf('--') === 0);

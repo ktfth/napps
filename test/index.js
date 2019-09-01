@@ -1,5 +1,6 @@
-const assert = require('assert');
+const fs = require('fs');
 const nap = require('../');
+const assert = require('assert');
 
 const { Transform } = require('stream');
 
@@ -97,5 +98,12 @@ describe('Nap traversal search transform', () => {
 describe('Nap essentials', () => {
     it('filter fragments', () => {
         assert.deepEqual(nap.filterFragments(['--extract', 'test']), ['test']);
+    });
+
+    it('filter directory', () => {
+        let dirs = fs.readdirSync('./', {
+          withFileTypes: true
+        });
+        assert.ok(nap.filterDirectory(dirs).length > 0);
     });
 });
