@@ -116,4 +116,8 @@ describe('Nap essentials', () => {
         });
         assert.ok(nap.filterIsDirectory(dirs).length > 0);
     });
+
+    it('filter exclude', () => {
+        assert.deepEqual(nap.filterExclude(['--exclude=txt', 'some-test']), ['--exclude=txt']);
+    });
 });

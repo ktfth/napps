@@ -103,6 +103,15 @@ let filterIsDirectory = directory => {
 };
 exports.filterIsDirectory = filterIsDirectory;
 
+let filterExclude = args => {
+    return args.filter(v => {
+        if (v.indexOf(_excludeFlag) > -1) {
+          return v;
+        }
+    });
+};
+exports.filterExclude = filterExclude;
+
 let filterFragments = (args) => {
     return args.filter(v => {
         return !(v.indexOf('--') === 0);

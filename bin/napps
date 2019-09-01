@@ -21,13 +21,7 @@ if (isPipe) {
 
     let filterIsDirectory = nap.filterIsDirectory;
 
-    let filterExclude = args => {
-      return args.filter(v => {
-          if (v.indexOf(nap.excludeFlag) > -1) {
-            return v;
-          }
-      });
-    };
+    let filterExclude = nap.filterExclude(args);
 
     let excludesMap = excludes => {
       return excludes.map(v => v.split(_argSep));
