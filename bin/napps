@@ -6,7 +6,7 @@ const isPipe = !isTTY;
 const { Transform } = require('stream');
 const args = process.argv.slice(2);
 const nap = require('../');
-let searchData = null;
+const _argSep = '=';
 
 process.stdin.setEncoding('utf8');
 
@@ -36,6 +36,10 @@ if (isPipe) {
           }
       });
     };
+
+    let excludesMap = excludes => {
+      return excludes.map(v => v.split(_argSep));
+    };
     // searchData = nap.searchDataTransform(args);
     let traversalSearch = (dir, dirs=[]) => {
         let limit = 0;
@@ -54,7 +58,7 @@ if (isPipe) {
               let filePath = path.resolve(dir, file.name);
               let excludes = filterExclude(args);
 
-              excludes = excludes.map(v => v.split('='));
+              excludes = excludesMap(excludes);
 
               if (!excludes.length) {
                 fs.createReadStream(filePath)
