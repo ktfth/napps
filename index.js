@@ -27,6 +27,9 @@ exports.regularExpressionFlag = _regularExpressionFlag;
 const _excludeFlag = '--exclude';
 exports.excludeFlag = _excludeFlag;
 
+const _argSep = '=';
+exports.argSep = _argSep;
+
 let hasExtractFlag = v => {
     return v === _extractFlag;
 };

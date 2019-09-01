@@ -75,7 +75,11 @@ describe('Nap flags', () => {
 
     it('exclude flag', () => {
         assert.equal(nap.excludeFlag, '--exclude');
-    })
+    });
+
+    it('argSep', () => {
+        assert.equal(nap.argSep, '=');
+    });
 });
 
 describe('Nap search transform', () => {
