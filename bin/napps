@@ -25,20 +25,24 @@ if (isPipe) {
 
     let excludesMap = nap.excludesMap;
 
+    let renderPipeline = (filePath) => {
+        let fileStream = fs.createReadStream(filePath);
+        fileStream
+          .pipe(nap.traversalSearchDataTransform(args, filePath))
+          .pipe(process.stdout);
+        return fileStream;
+    };
+
     let singlePipeline = (args, filePath, excludes) => {
         if (!excludes.length) {
-          fs.createReadStream(filePath)
-            .pipe(nap.traversalSearchDataTransform(args, filePath))
-            .pipe(process.stdout);
+          renderPipeline(filePath);
         }
     };
 
     let mulPipeline = (args, filePath, excludes) => {
         return excludes.map(v => {
             if (filePath.indexOf(v[1]) === -1) {
-              fs.createReadStream(filePath)
-                .pipe(nap.traversalSearchDataTransform(args, filePath))
-                .pipe(process.stdout);
+                renderPipeline(filePath);
             }
 
             return v;
