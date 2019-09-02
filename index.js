@@ -83,9 +83,9 @@ let hasExtractFlagWithPresence = (args, presence) => {
 };
 exports.hasExtractFlagWithPresence = hasExtractFlagWithPresence;
 
-let hasRegExpFlagAndRegExpMap = (args, presenceRegexp) => {
-    let hasRegExpFlag = args.indexOf(_regularExpressionFlag > -1);
-    return hasRegExpFlag && presenceRegexp !== undefined;
+let hasRegExpFlagAndRegExpMap = (args, presenceRegexp=[]) => {
+    let hasRegExpFlag = hasRegExpFlagInArgs(args);
+    return hasRegExpFlag && (presenceRegexp.length);
 };
 exports.hasRegExpFlagAndRegExpMap = hasRegExpFlagAndRegExpMap;
 
@@ -146,8 +146,8 @@ exports.filterReFlag = filterReFlag;
 let searchDataTransformFn = (args, filePath, line) => {
     let prepareRegExpPresence = (args, presence) => {
       if (hasRegExpFlagInArgs(args) && (presence.length)) {
-          presenceRegexp = presence.map(v => {
-              return new RegExp(v, 'g');
+          presenceRegexp = presence.filter(v => v !== _regularExpressionFlag).map(v => {
+              return new RegExp(v);
           });
       }
     };
@@ -188,22 +188,24 @@ let searchDataTransformFn = (args, filePath, line) => {
                 return presence;
             };
 
-            let extractRegExpFragment = (args, presence, presenceRegexp) => {
-                if (hasRegExpFlagAndRegExpMap(args, presenceRegexp)) {
-                    presence = presenceRegexp.map((v, i) => {
+            let extractRegExpFragment = (ags, pr, prp, cnt) => {
+                if (hasRegExpFlagAndRegExpMap(ags, prp)) {
+                    pr = prp.map((v, i) => {
                         let out = '';
-                        let matchingCase = raw.match(v);
-                        out = matchingCase[0] + ' (' + matchingCase.input + ')'
+                        let matchingCase = cnt.toString().match(v);
+                        if (matchingCase && (matchingCase[0] !== _regularExpressionFlag && matchingCase.input !== undefined)) {
+                            out = matchingCase.input
+                        }
                         return out;
                     });
                 }
-                return presence;
+                return pr;
             };
 
             let resumeExtraction = (args, presence, presenceRegexp, raw) => {
                 if (hasExtractFlagWithPresence(args, presence)) {
                     presence = extractFragment(presence, raw);
-                    presence = extractRegExpFragment(args, presence, presenceRegexp);
+                    presence = extractRegExpFragment(args, presence, presenceRegexp, raw);
                     presence = presence.filter(v => v !== '');
                     if (presence.length) {
                       self.push(bufferContentByPresence(presence));
@@ -224,12 +226,14 @@ let searchDataTransformFn = (args, filePath, line) => {
 exports.searchDataTransform = searchDataTransformFn;
 
 let traversalSearchDataTransformFn = (args, filePath, line) => {
-    let prepareRegExpPresence = (args, presence) => {
-      if (hasRegExpFlagInArgs(args) && (presence.length)) {
-          presenceRegexp = presence.map(v => {
-              return new RegExp(v, 'g');
+    let prepareRegExpPresence = (ags, pr=[]) => {
+      let prp = [];
+      if (hasRegExpFlagInArgs(ags) && (pr.length)) {
+          prp = pr.filter(v => v !== _regularExpressionFlag).map(v => {
+              return new RegExp(v);
           });
       }
+      return prp;
     };
 
     return new Transform({
@@ -261,19 +265,21 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
                 }
             };
 
-            let resumeExtraction = (args, presence, presenceRegexp, raw) => {
-                if (hasExtractFlagWithPresence(args, presence)) {
-                    if (hasNotRegExpFlag(args)) {
-                        presence = presence.map(v => extractFn(v, raw));
-                    } if (hasRegExpFlagAndRegExpMap(args, presenceRegexp)) {
-                        presence = presenceRegexp.map((v, i) => {
+            let resumeExtraction = (ags, pr, prp, cnt, fp) => {
+                if (hasExtractFlagWithPresence(ags, pr)) {
+                    if (hasNotRegExpFlag(ags)) {
+                        pr = pr.map(v => extractFn(v, cnt));
+                    } if (hasRegExpFlagAndRegExpMap(ags, prp)) {
+                        pr = prp.map((v, i) => {
                             let out = '';
-                            let matchingCase = raw.match(v);
-                            out = matchingCase[0] + ' (' + matchingCase.input + ')'
+                            let matchingCase = cnt.toString().match(v);
+                            if (matchingCase && (matchingCase[0] !== _regularExpressionFlag && matchingCase.input !== undefined)) {
+                                out = matchingCase.input;
+                            }
                             return out;
                         });
-                    } if (presence.filter(v => v !== '').length) {
-                        self.push(bufferContentByFile(filePath, presence));
+                    } if (pr.filter(v => v !== '').length) {
+                        self.push(bufferContentByFile(fp, pr));
                     }
                 }
             };
@@ -281,7 +287,7 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
             presence = filterReFlag(presence);
 
             resumeCounter(args, presence, raw);
-            resumeExtraction(args, presence, presenceRegexp, raw);
+            resumeExtraction(args, presence, presenceRegexp, raw, filePath);
 
             callback();
         }
