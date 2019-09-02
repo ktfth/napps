@@ -33,6 +33,12 @@ describe('Nap text searcher', () => {
     it('filter re flag', () => {
         assert.deepEqual(nap.filterReFlag(['--re', 'some-value']), ['some-value']);
     });
+
+    it('prepare regexp fragment', () => {
+        let prp = nap.prepareRegExpPresence(['--re'], ['some-value']);
+        console.log(prp);
+        assert.ok(prp.length > 0);
+    });
 });
 
 describe('Nap text extractor', () => {

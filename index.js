@@ -143,15 +143,18 @@ let filterReFlag = (presence) => {
 };
 exports.filterReFlag = filterReFlag;
 
-let searchDataTransformFn = (args, filePath, line) => {
-    let prepareRegExpPresence = (args, presence) => {
-      if (hasRegExpFlagInArgs(args) && (presence.length)) {
-          presenceRegexp = presence.filter(v => v !== _regularExpressionFlag).map(v => {
-              return new RegExp(v);
-          });
-      }
-    };
+let prepareRegExpPresence = (ags, pr) => {
+    if (hasRegExpFlagInArgs(ags) && (pr.length)) {
+        prp = filterReFlag(pr);
+        prp = pr.map(v => {
+            return new RegExp(v);
+        });
+    }
+    return prp;
+};
+exports.prepareRegExpPresence = prepareRegExpPresence;
 
+let searchDataTransformFn = (args, filePath, line) => {
     return new Transform({
         transform(raw, encoding, callback) {
             let self = this;
@@ -226,16 +229,6 @@ let searchDataTransformFn = (args, filePath, line) => {
 exports.searchDataTransform = searchDataTransformFn;
 
 let traversalSearchDataTransformFn = (args, filePath, line) => {
-    let prepareRegExpPresence = (ags, pr=[]) => {
-      let prp = [];
-      if (hasRegExpFlagInArgs(ags) && (pr.length)) {
-          prp = pr.filter(v => v !== _regularExpressionFlag).map(v => {
-              return new RegExp(v);
-          });
-      }
-      return prp;
-    };
-
     return new Transform({
         transform(raw, encoding, callback) {
             let self = this;
