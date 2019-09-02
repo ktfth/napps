@@ -164,6 +164,15 @@ let countPresenceMap = (pr, cnt) => {
 };
 exports.countPresenceMap = countPresenceMap;
 
+let bufferContentByPresence = (ags, pr, rev=null) => {
+    let cnt = pr.join('\n') + '\n';
+    if (!hasNotExtractFlagWithPresence(ags, pr) && rev) {
+      cnt = cnt.split('').reverse().join('');
+    }
+    return Buffer.from(cnt);
+};
+exports.bufferContentByPresence = bufferContentByPresence;
+
 let searchDataTransformFn = (args, filePath, line) => {
     return new Transform({
         transform(raw, encoding, callback) {
@@ -174,19 +183,11 @@ let searchDataTransformFn = (args, filePath, line) => {
 
             let resumePresenceCounterMap = countPresenceMap;
 
-            let bufferContentByPresence = (presence) => {
-                let content = presence.join('\n') + '\n';
-                if (!hasNotExtractFlagWithPresence(args, presence) && rev) {
-                  content = content.split('').reverse().join('');
-                }
-                return Buffer.from(content);
-            };
-
             let resumeCounter = (args, presence, raw) => {
                 if (hasNotExtractFlagWithPresence(args, presence)) {
                     presence = resumePresenceCounterMap(presence, raw);
                     if (presence.length) {
-                        self.push(bufferContentByPresence(presence));
+                        self.push(bufferContentByPresence(args, presence, rev));
                     }
                 }
             };
@@ -224,7 +225,7 @@ let searchDataTransformFn = (args, filePath, line) => {
                     presence = extractRegExpFragment(args, presence, presenceRegexp, raw);
                     presence = presence.filter(v => v !== '');
                     if (presence.length) {
-                      self.push(bufferContentByPresence(presence));
+                      self.push(bufferContentByPresence(args, presence, rev));
                     }
                     process.exit(0);
                 }

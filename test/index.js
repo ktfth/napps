@@ -147,3 +147,9 @@ describe('Nap essentials', () => {
         assert.ok(nap.countPresenceMap(['some'], 'some-value').length > 0);
     });
 });
+
+describe('Nap buffering', () => {
+    it('method return buffer instance', () => {
+        assert.ok(nap.bufferContentByPresence(['sample'], ['some-value']) instanceof Buffer);
+    })
+});
