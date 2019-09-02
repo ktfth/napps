@@ -263,7 +263,7 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
                 if (hasNotExtractFlagWithPresence(args, presence)) {
                     presence = countPresenceMap(presence, raw);
                     if (presence.length) {
-                        self.push(bufferContentByFile(filePath, presence));
+                        self.push(bufferContentByFile(filePath, args, presence, rev));
                     }
                 }
             };
