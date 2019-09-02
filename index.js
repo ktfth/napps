@@ -203,7 +203,13 @@ let searchDataTransformFn = (args, filePath, line) => {
                     pr = prp.map((v, i) => {
                         let out = '';
                         let matchingCase = cnt.toString().match(v);
-                        if (matchingCase && (matchingCase[0] !== _regularExpressionFlag && matchingCase.input !== undefined)) {
+                        let reFlag = _regularExpressionFlag;
+                        let ufd = undefined;
+                        let ismtcc = matchingCase !== null;
+                        let isnmre = ismtcc && matchingCase[0] !== reFlag;
+                        let isnmi = ismtcc && matchingCase.input !== ufd;
+                        let matchingOpts = (isnmre && isnmi);
+                        if (matchingCase && matchingOpts) {
                             out = matchingCase.input
                         }
                         return out;
@@ -268,7 +274,13 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
                         pr = prp.map((v, i) => {
                             let out = '';
                             let matchingCase = cnt.toString().match(v);
-                            if (matchingCase && (matchingCase[0] !== _regularExpressionFlag && matchingCase.input !== undefined)) {
+                            let reFlag = _regularExpressionFlag;
+                            let ufd = undefined;
+                            let ismtcc = matchingCase !== null;
+                            let isnmre = ismtcc && matchingCase[0] !== reFlag;
+                            let isnmi = ismtcc && matchingCase.input !== ufd;
+                            let matchingOpts = (isnmre && isnmi);
+                            if (matchingCase && matchingOpts) {
                                 out = matchingCase.input;
                             }
                             return out;
