@@ -243,11 +243,6 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
             let presence = presenceFn(raw, args);
             let presenceRegexp = prepareRegExpPresence(args, presence);
 
-            let countPresenceMap = (presence, raw) => {
-                let ctr = (v) => countFn(v, raw);
-                return presence.filter(v => ctr(v) > 0).map(v => v + ' (' + ctr(v) + ')');
-            };
-
             let bufferContentByFile = (filePath, presence) => {
                 let content = filePath + '\n' + presence.join('\n') + '\n';
                 if (!hasNotExtractFlagWithPresence(args, presence) && rev) {
