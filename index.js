@@ -137,6 +137,12 @@ let presenceFn = (raw, args) => {
 };
 exports.presence = presenceFn;
 
+let filterReFlag = (presence) => {
+  presence = filterFragments(presence);
+  return presence;
+};
+exports.filterReFlag = filterReFlag;
+
 let searchDataTransformFn = (args, filePath, line) => {
     let prepareRegExpPresence = (args, presence) => {
       if (hasRegExpFlagInArgs(args) && (presence.length)) {
@@ -152,11 +158,6 @@ let searchDataTransformFn = (args, filePath, line) => {
             let rev = args.indexOf('--rev') > -1;
             let presence = presenceFn(raw, args);
             let presenceRegexp = prepareRegExpPresence(args, presence);
-
-            let filterReFlag = (presence) => {
-              presence = filterFragments(presence);
-              return presence;
-            }
 
             let resumePresenceCounterMap = (raw) => {
                 let ctr = (v) => countFn(v, raw);
@@ -223,23 +224,6 @@ let searchDataTransformFn = (args, filePath, line) => {
 exports.searchDataTransform = searchDataTransformFn;
 
 let traversalSearchDataTransformFn = (args, filePath, line) => {
-    let presenceFn = (raw, args) => {
-        return args.filter(v => {
-            if (v.indexOf('--') === -1) {
-              return v;
-            } if (findAndHasNotFlags(v, raw)) {
-                return v;
-            } if (findAndHasNotFlag(v, raw)) {
-                return v;
-            }
-        });
-    };
-
-    let filterReFlag = (presence) => {
-      presence = filterFragments(presence);
-      return presence;
-    }
-
     let prepareRegExpPresence = (args, presence) => {
       if (hasRegExpFlagInArgs(args) && (presence.length)) {
           presenceRegexp = presence.map(v => {

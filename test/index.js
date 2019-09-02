@@ -29,6 +29,10 @@ describe('Nap text searcher', () => {
     it('presence', () => {
         assert.deepEqual(nap.presence('some-value', ['--extract', 'some-value']), ['some-value']);
     });
+
+    it('filter re flag', () => {
+        assert.deepEqual(nap.filterReFlag(['--re', 'some-value']), ['some-value']);
+    });
 });
 
 describe('Nap text extractor', () => {
