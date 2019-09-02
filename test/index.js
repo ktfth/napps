@@ -142,4 +142,8 @@ describe('Nap essentials', () => {
     it('excludes map', () => {
         assert.deepEqual(nap.excludesMap(['--exclude=txt']), [['--exclude', 'txt']]);
     });
+
+    it('count presence map', () => {
+        assert.ok(nap.countPresenceMap(['some'], 'some-value').length > 0);
+    });
 });

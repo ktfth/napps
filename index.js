@@ -144,6 +144,7 @@ let filterReFlag = (presence) => {
 exports.filterReFlag = filterReFlag;
 
 let prepareRegExpPresence = (ags, pr) => {
+    let prp = [];
     if (hasRegExpFlagInArgs(ags) && (pr.length)) {
         prp = filterReFlag(pr);
         prp = pr.map(v => {
@@ -157,6 +158,12 @@ exports.prepareRegExpPresence = prepareRegExpPresence;
 const _revFlag = '--rev';
 exports.revFlag = _revFlag;
 
+let countPresenceMap = (pr, cnt) => {
+    let ctr = (v) => countFn(v, cnt);
+    return pr.filter(v => ctr(v) > 0).map(v => v + ' (' + ctr(v) + ')');
+};
+exports.countPresenceMap = countPresenceMap;
+
 let searchDataTransformFn = (args, filePath, line) => {
     return new Transform({
         transform(raw, encoding, callback) {
@@ -165,10 +172,7 @@ let searchDataTransformFn = (args, filePath, line) => {
             let presence = presenceFn(raw, args);
             let presenceRegexp = prepareRegExpPresence(args, presence);
 
-            let resumePresenceCounterMap = (raw) => {
-                let ctr = (v) => countFn(v, raw);
-                return presence.filter(v => ctr(v) > 0).map(v => v + ' (' + ctr(v) + ')');
-            };
+            let resumePresenceCounterMap = countPresenceMap;
 
             let bufferContentByPresence = (presence) => {
                 let content = presence.join('\n') + '\n';
@@ -180,7 +184,7 @@ let searchDataTransformFn = (args, filePath, line) => {
 
             let resumeCounter = (args, presence, raw) => {
                 if (hasNotExtractFlagWithPresence(args, presence)) {
-                    presence = resumePresenceCounterMap(raw);
+                    presence = resumePresenceCounterMap(presence, raw);
                     if (presence.length) {
                         self.push(bufferContentByPresence(presence));
                     }
