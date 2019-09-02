@@ -124,19 +124,20 @@ let filterFragments = (args) => {
 };
 exports.filterFragments = filterFragments;
 
-let searchDataTransformFn = (args, filePath, line) => {
-    let presenceFn = (raw, args) => {
-        return args.filter(v => {
-            if (v.indexOf('--') === -1) {
-              return v;
-            } if (findAndHasNotFlags(v, raw)) {
-                return v;
-            } if (findAndHasNotFlag(v, raw)) {
-                return v;
-            }
-        });
-    };
+let presenceFn = (raw, args) => {
+    return args.filter(v => {
+        if (v.indexOf('--') === -1) {
+          return v;
+        } if (findAndHasNotFlags(v, raw)) {
+            return v;
+        } if (findAndHasNotFlag(v, raw)) {
+            return v;
+        }
+    });
+};
+exports.presence = presenceFn;
 
+let searchDataTransformFn = (args, filePath, line) => {
     let prepareRegExpPresence = (args, presence) => {
       if (hasRegExpFlagInArgs(args) && (presence.length)) {
           presenceRegexp = presence.map(v => {

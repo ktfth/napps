@@ -25,6 +25,10 @@ describe('Nap text searcher', () => {
     it('find and has not extraction flag', () => {
         assert.ok(nap.findAndHasNotFlag('love', 'i love grapes'));
     })
+
+    it('presence', () => {
+        assert.deepEqual(nap.presence('some-value', ['--extract', 'some-value']), ['some-value']);
+    });
 });
 
 describe('Nap text extractor', () => {
