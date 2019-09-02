@@ -151,5 +151,9 @@ describe('Nap essentials', () => {
 describe('Nap buffering', () => {
     it('method return buffer instance', () => {
         assert.ok(nap.bufferContentByPresence(['sample'], ['some-value']) instanceof Buffer);
-    })
+    });
+
+    it('method return buffer instance by file', () => {
+        assert.ok(nap.bufferContentByFile('/dev/null', ['sample'], ['some-value']) instanceof Buffer);
+    });
 });

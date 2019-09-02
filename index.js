@@ -173,6 +173,15 @@ let bufferContentByPresence = (ags, pr, rev=null) => {
 };
 exports.bufferContentByPresence = bufferContentByPresence;
 
+let bufferContentByFile = (fp, ags, pr, rev=null) => {
+    let cnt = fp + '\n' + pr.join('\n') + '\n';
+    if (!hasNotExtractFlagWithPresence(ags, pr) && rev) {
+      cnt = cnt.split('').reverse().join('');
+    }
+    return Buffer.from(cnt);
+};
+exports.bufferContentByFile = bufferContentByFile;
+
 let searchDataTransformFn = (args, filePath, line) => {
     return new Transform({
         transform(raw, encoding, callback) {
@@ -250,14 +259,6 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
             let presence = presenceFn(raw, args);
             let presenceRegexp = prepareRegExpPresence(args, presence);
 
-            let bufferContentByFile = (filePath, presence) => {
-                let content = filePath + '\n' + presence.join('\n') + '\n';
-                if (!hasNotExtractFlagWithPresence(args, presence) && rev) {
-                  content = content.split('').reverse().join('');
-                }
-                return Buffer.from(content);
-            };
-
             let resumeCounter = (args, presence, raw) => {
                 if (hasNotExtractFlagWithPresence(args, presence)) {
                     presence = countPresenceMap(presence, raw);
@@ -287,7 +288,7 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
                             return out;
                         });
                     } if (pr.filter(v => v !== '').length) {
-                        self.push(bufferContentByFile(fp, pr));
+                        self.push(bufferContentByFile(fp, ags, pr, rev));
                     }
                 }
             };
