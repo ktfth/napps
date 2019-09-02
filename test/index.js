@@ -96,6 +96,10 @@ describe('Nap flags', () => {
     it('argSep', () => {
         assert.equal(nap.argSep, '=');
     });
+
+    it('reverse flag', () => {
+        assert.equal(nap.revFlag, '--rev');
+    });
 });
 
 describe('Nap search transform', () => {

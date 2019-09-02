@@ -154,11 +154,14 @@ let prepareRegExpPresence = (ags, pr) => {
 };
 exports.prepareRegExpPresence = prepareRegExpPresence;
 
+const _revFlag = '--rev';
+exports.revFlag = _revFlag;
+
 let searchDataTransformFn = (args, filePath, line) => {
     return new Transform({
         transform(raw, encoding, callback) {
             let self = this;
-            let rev = args.indexOf('--rev') > -1;
+            let rev = args.indexOf(_revFlag) > -1;
             let presence = presenceFn(raw, args);
             let presenceRegexp = prepareRegExpPresence(args, presence);
 
@@ -232,7 +235,7 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
     return new Transform({
         transform(raw, encoding, callback) {
             let self = this;
-            let rev = args.indexOf('--rev') > -1;
+            let rev = args.indexOf(_revFlag) > -1;
             let presence = presenceFn(raw, args);
             let presenceRegexp = prepareRegExpPresence(args, presence);
 
