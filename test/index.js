@@ -14,6 +14,16 @@ describe('Nap text searcher', () => {
         assert.ok(!nap.find('orange', 'i love grapes', 'failing to be tolerant'))
     });
 
+    it('match content by term', () => {
+        assert.ok(nap.matchContent('some', 'some-value') !== null);
+    });
+
+    it('math content by term returning input', () => {
+        let v = new RegExp('some', 'ig')
+        let expected = 'some-value'.match(v);
+        assert.deepEqual(nap.matchContent('some', 'some-value'), expected);
+    });
+
     it('count some times the content appears', () => {
         assert.equal(nap.count('sample', 'sample some sample'), 2);
     });
