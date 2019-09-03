@@ -4,7 +4,7 @@ let findFn = (v, content) => content.indexOf(v) > -1;
 exports.find = findFn;
 
 let matchContent = (v, content) => {
-    v = new RegExp(v, 'ig');
+    v = new RegExp(v, 'g');
     content = content.toString();
     return content.match(v);
 };
@@ -13,7 +13,7 @@ exports.matchContent = matchContent;
 let countFn = (v, content) => {
     let out = 0;
     out = matchContent(v, content);
-    out = Math.max(0, out.length);
+    out = out === null ? 0 : Math.max(0, out.length);
     return out;
 };
 exports.count = countFn;

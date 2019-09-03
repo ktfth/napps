@@ -19,7 +19,7 @@ describe('Nap text searcher', () => {
     });
 
     it('math content by term returning input', () => {
-        let v = new RegExp('some', 'ig')
+        let v = new RegExp('some', 'g')
         let expected = 'some-value'.match(v);
         assert.deepEqual(nap.matchContent('some', 'some-value'), expected);
     });
