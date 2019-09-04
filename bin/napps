@@ -11,7 +11,7 @@ const package = require('../package.json');
 
 process.stdin.setEncoding('utf8');
 
-process.stdout.setMaxListeners(10000);
+process.stdout.setMaxListeners(100000);
 
 if (isPipe) {
     searchData = nap.searchDataTransform(args);
