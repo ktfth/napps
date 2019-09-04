@@ -27,6 +27,7 @@ if (isPipe) {
 
     let renderPipeline = (filePath) => {
         let fileStream = fs.createReadStream(filePath);
+        fileStream.setMaxListeners(100000);
         fileStream
           .pipe(nap.traversalSearchDataTransform(args, filePath))
           .pipe(process.stdout);
