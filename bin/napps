@@ -55,9 +55,11 @@ if (isPipe) {
           traversalSearch(access, _cacheDirectories);
       }
     };
+
+    let limit = 0;
+
     // searchData = nap.searchDataTransform(args);
     let traversalSearch = (dir, dirs=[]) => {
-        let limit = 0;
         let directory = fs.readdirSync(dir, {
             withFileTypes: true
         });
@@ -73,18 +75,21 @@ if (isPipe) {
               let filePath = path.resolve(dir, file.name);
               let excludes = filterExclude(args);
 
-              excludes = excludesMap(excludes);
-
-              singlePipeline(args, filePath, excludes);
-              mulPipeline(args, filePath, excludes);
+              if (fs.existsSync(filePath)) {
+                  excludes = excludesMap(excludes);
+                  singlePipeline(args, filePath, excludes);
+                  mulPipeline(args, filePath, excludes);
+              }
             }
 
             if (limit < 1000) {
                 for (let i = 0, l = _cacheDirectories.length; i < l; i += 1) {
                     let directory = _cacheDirectories[i];
                     let access = path.resolve(dir, directory.name);
-                    traverse(access, _cacheDirectories);
-                    limit += 1;
+                    if (fs.existsSync(access)) {
+                        traverse(access, _cacheDirectories);
+                        limit += 1;
+                    }
                 }
             }
         }
