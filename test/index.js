@@ -49,6 +49,10 @@ describe('Nap text searcher', () => {
         console.log(prp);
         assert.ok(prp.length > 0);
     });
+
+    it('nice flag', () => {
+        assert.equal(nap.niceFlag, '--nice');
+    });
 });
 
 describe('Nap text extractor', () => {

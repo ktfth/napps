@@ -58,6 +58,31 @@ if (isPipe) {
 
     let limit = 0;
 
+    let iterateSingleAndMultPipeline = (ags, d, dirs) => {
+        for (let i = 0, l = dirs.length; i < l; i += 1) {
+          let file = dirs[i];
+          let filePath = path.resolve(d, file.name);
+          let ecs = excludesMap(filterExclude(ags));
+
+          if (fs.existsSync(filePath)) {
+              singlePipeline(ags, filePath, ecs);
+              mulPipeline(ags, filePath, ecs);
+          }
+        }
+    };
+
+    let iterateTraversalPipeline = (d, dirs) => {
+        for (let i = 0, l = dirs.length; i < l; i += 1) {
+            let directory = dirs[i];
+            let access = path.resolve(d, directory.name);
+
+            if (fs.existsSync(access)) {
+                traverse(access, dirs);
+                limit += 1;
+            }
+        }
+    };
+
     // searchData = nap.searchDataTransform(args);
     let traversalSearch = (dir, dirs=[]) => {
         let directory = fs.readdirSync(dir, {
@@ -70,27 +95,10 @@ if (isPipe) {
             _cacheDirectories = filterIsDirectory(directory);
 
             if (limit < 10000) {
-                for (let i = 0, l = _cacheDirectory.length; i < l; i += 1) {
-                  let file = _cacheDirectory[i];
-                  let filePath = path.resolve(dir, file.name);
-                  let excludes = excludesMap(filterExclude(args));
+                iterateSingleAndMultPipeline(args, dir, _cacheDirectory);
 
-                  if (fs.existsSync(filePath)) {
-                      singlePipeline(args, filePath, excludes);
-                      mulPipeline(args, filePath, excludes);
-                  }
-                }
-
-                if (args.indexOf('--nice') === -1) {
-                    for (let i = 0, l = _cacheDirectories.length; i < l; i += 1) {
-                        let directory = _cacheDirectories[i];
-                        let access = path.resolve(dir, directory.name);
-
-                        if (fs.existsSync(access)) {
-                            traverse(access, _cacheDirectories);
-                            limit += 1;
-                        }
-                    }
+                if (args.indexOf(nap.niceFlag) === -1) {
+                    iterateTraversalPipeline(dir, _cacheDirectories);
                 }
             }
         }

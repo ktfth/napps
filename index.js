@@ -37,6 +37,9 @@ exports.excludeFlag = _excludeFlag;
 const _argSep = '=';
 exports.argSep = _argSep;
 
+const _niceFlag = '--nice';
+exports.niceFlag = _niceFlag;
+
 let hasExtractFlag = v => {
     return v === _extractFlag;
 };
