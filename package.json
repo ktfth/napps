@@ -20,5 +20,9 @@
   "bugs": {
     "url": "https://github.com/ktfth/nap/issues"
   },
-  "homepage": "https://github.com/ktfth/nap#readme"
+  "homepage": "https://github.com/ktfth/nap#readme",
+  "dependencies": {
+    "jquery": "^3.4.1",
+    "jsdom": "^15.1.1"
+  }
 }
