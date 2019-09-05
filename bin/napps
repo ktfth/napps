@@ -64,10 +64,13 @@ if (isPipe) {
           let filePath = path.resolve(d, file.name);
           let ecs = excludesMap(filterExclude(ags));
 
-          if (fs.existsSync(filePath)) {
-              singlePipeline(ags, filePath, ecs);
-              mulPipeline(ags, filePath, ecs);
-          }
+          ecs.map(v => {
+              if (filePath.indexOf(v[1]) === -1 && fs.existsSync(filePath)) {
+                  singlePipeline(ags, filePath, ecs);
+                  mulPipeline(ags, filePath, ecs);
+              }
+              return v;
+          })
         }
     };
 
