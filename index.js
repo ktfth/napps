@@ -246,6 +246,7 @@ let searchDataTransformFn = (args, filePath, line) => {
             };
 
             let resumeExtraction = (args, presence, presenceRegexp, raw) => {
+                let context = this;
                 if (hasExtractFlag(args) && html) {
                     let dom = new JSDOM(raw.toString());
                     let $ = require('jquery')(dom.window);
