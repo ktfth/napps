@@ -1,3 +1,5 @@
+const jsdom = require('jsdom');
+const { JSDOM } = jsdom;
 const { Transform } = require('stream');
 
 let findFn = (v, content) => content.indexOf(v) > -1;
@@ -40,8 +42,12 @@ exports.argSep = _argSep;
 const _niceFlag = '--nice';
 exports.niceFlag = _niceFlag;
 
-let hasExtractFlag = v => {
+let isExtractFlag = v => {
     return v === _extractFlag;
+};
+
+let hasExtractFlag = (args) => {
+    return args.indexOf(_extractFlag) > -1;
 };
 
 let hasNotExtraction = v => {
@@ -89,7 +95,7 @@ let hasNotExtractFlagWithPresence = (args, presence) => {
 exports.hasNotExtractFlagWithPresence = hasNotExtractFlagWithPresence;
 
 let hasExtractFlagWithPresence = (args, presence) => {
-    return args.indexOf(_extractFlag) > -1 && (presence.length);
+    return hasExtractFlag(args) && (presence.length);
 };
 exports.hasExtractFlagWithPresence = hasExtractFlagWithPresence;
 
@@ -197,6 +203,7 @@ let searchDataTransformFn = (args, filePath, line) => {
         transform(raw, encoding, callback) {
             let self = this;
             let rev = args.indexOf(_revFlag) > -1;
+            let html = args.indexOf('--html') > -1;
             let presence = presenceFn(raw, args);
             let presenceRegexp = prepareRegExpPresence(args, presence);
 
@@ -239,7 +246,18 @@ let searchDataTransformFn = (args, filePath, line) => {
             };
 
             let resumeExtraction = (args, presence, presenceRegexp, raw) => {
-                if (hasExtractFlagWithPresence(args, presence)) {
+                let context = this;
+                if (hasExtractFlag(args) && html) {
+                    let dom = new JSDOM(raw.toString());
+                    let $ = require('jquery')(dom.window);
+                    presence = presence.map(v => {
+                        let el = $(v);
+                        return el.html();
+                    });
+                    if (presence.length) {
+                        self.push(bufferContentByPresence(args, presence, rev));
+                    }
+                } else if (hasExtractFlagWithPresence(args, presence)) {
                     presence = extractFragment(presence, raw);
                     presence = extractRegExpFragment(args, presence, presenceRegexp, raw);
                     presence = presence.filter(v => v !== '');

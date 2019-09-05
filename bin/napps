@@ -35,19 +35,22 @@ if (isPipe) {
     };
 
     let singlePipeline = (args, filePath, excludes) => {
-        if (!excludes.length) {
+        if (excludes === undefined || !excludes.length) {
           renderPipeline(filePath);
         }
     };
 
     let mulPipeline = (args, filePath, excludes) => {
-        return excludes.map(v => {
-            if (filePath.indexOf(v[1]) === -1) {
-                renderPipeline(filePath);
-            }
-
-            return v;
-        });
+        if (excludes !== undefined && excludes.length) {
+            let revised = [];
+            return excludes.map(v => {
+                if (revised.indexOf(filePath) === -1 && filePath.indexOf(v[1]) === -1) {
+                    renderPipeline(filePath);
+                    revised.push(filePath);
+                }
+                return v;
+            });
+        }
     };
 
     let traverse = (access, _cacheDirectories) => {
@@ -64,24 +67,48 @@ if (isPipe) {
           let filePath = path.resolve(d, file.name);
           let ecs = excludesMap(filterExclude(ags));
 
-          ecs.map(v => {
-              if (filePath.indexOf(v[1]) === -1 && fs.existsSync(filePath)) {
+          if (ecs !== undefined && ecs.length) {
+              let revised = [];
+              ecs.map(v => {
+                  let isNotExcluded = filePath.indexOf(v[1]) === -1;
+                  if (isNotExcluded && revised.indexOf(filePath) === -1 && fs.existsSync(filePath)) {
+                      singlePipeline(ags, filePath, ecs);
+                      mulPipeline(ags, filePath, ecs);
+                      revised.push(filePath);
+                  }
+                  return v;
+              });
+          } else {
+              if (fs.existsSync(filePath)) {
                   singlePipeline(ags, filePath, ecs);
                   mulPipeline(ags, filePath, ecs);
               }
-              return v;
-          })
+          }
         }
     };
 
-    let iterateTraversalPipeline = (d, dirs) => {
+    let iterateTraversalPipeline = (ags, d, dirs) => {
         for (let i = 0, l = dirs.length; i < l; i += 1) {
             let directory = dirs[i];
             let access = path.resolve(d, directory.name);
+            let ecs = excludesMap(filterExclude(ags));
 
-            if (fs.existsSync(access)) {
-                traverse(access, dirs);
-                limit += 1;
+            if (ecs !== undefined && ecs.length) {
+                let revised = [];
+                ecs.map(v => {
+                    let isNotExcluded = access.indexOf(v[1]) === -1;
+                    if (isNotExcluded && revised.indexOf(access) === -1 && fs.existsSync(access)) {
+                        traverse(access, dirs);
+                        limit += 1;
+                        revised.push(access);
+                    }
+                    return v;
+                });
+            } else {
+                if (fs.existsSync(access)) {
+                    traverse(access, dirs);
+                    limit += 1;
+                }
             }
         }
     };
@@ -101,7 +128,7 @@ if (isPipe) {
                 iterateSingleAndMultPipeline(args, dir, _cacheDirectory);
 
                 if (args.indexOf(nap.niceFlag) === -1) {
-                    iterateTraversalPipeline(dir, _cacheDirectories);
+                    iterateTraversalPipeline(args, dir, _cacheDirectories);
                 }
             }
         }
