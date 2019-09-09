@@ -252,6 +252,14 @@ let searchDataTransformFn = (args, filePath, line) => {
                     let $ = require('jquery')(dom.window);
                     presence = presence.map(v => {
                         let el = $(v);
+                        let els = el.parents();
+                        els.each(parent => {
+                            presence.push(els.eq(parent));
+                        });
+                        return el;
+                    });
+                    presence = presence.map(v => {
+                        let el = $(v);
                         return el.parents().html();
                     });
                     if (presence.length) {
