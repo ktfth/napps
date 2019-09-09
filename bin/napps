@@ -141,6 +141,7 @@ if (isPipe) {
     console.log('--extract', ' - ', 'Show content as output founded by term');
     console.log('--exclude', ' - ', 'Receive an value to act like the ' +
                 'definition of parameter');
+    console.log('--html', ' - ', 'Extract content by query selection');
     console.log('--re', ' - ', 'Accept regular expression, combined');
     console.log('--rev', ' - ', 'Reverse the output');
 }
