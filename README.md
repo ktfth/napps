@@ -29,6 +29,10 @@ napps test --extract --exclude=txt
 napps test --extract --exclude=txt --rev
 ```
 
+```
+curl http://fth-ship.github.io/sea/ | ./bin/napps "p" --extract --html
+```
+
 ## Contribute
 
 ### Information
