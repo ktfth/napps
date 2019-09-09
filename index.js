@@ -250,20 +250,23 @@ let searchDataTransformFn = (args, filePath, line) => {
                 if (hasExtractFlag(args) && html) {
                     let dom = new JSDOM(raw.toString());
                     let $ = require('jquery')(dom.window);
+                    let _presence = [];
                     presence = presence.map(v => {
                         let el = $(v);
                         let els = el.parents();
+                        _presence.push(el);
                         els.each(parent => {
-                            presence.push(els.eq(parent));
+                            _presence.push(els.eq(parent));
                         });
                         return el;
                     });
-                    presence = presence.map(v => {
+                    _presence = presence.map(v => {
                         let el = $(v);
                         return el.parents().html();
                     });
                     if (presence.length) {
-                        self.push(bufferContentByPresence(args, presence, rev));
+                        self.push(bufferContentByPresence(args, _presence, rev));
+                        delete _presence;
                     }
                 } else if (hasExtractFlagWithPresence(args, presence)) {
                     presence = extractFragment(presence, raw);
