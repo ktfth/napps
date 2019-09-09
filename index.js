@@ -181,8 +181,9 @@ let countPresenceMap = (pr, cnt) => {
 exports.countPresenceMap = countPresenceMap;
 
 let bufferContentByPresence = (ags, pr, rev=null) => {
+    pr = pr.filter(v => v !== '');
     let cnt = pr.join('\n') + '\n';
-    if (!hasNotExtractFlagWithPresence(ags, pr) && rev) {
+    if (hasExtractFlagWithPresence(ags, pr) && rev) {
       cnt = cnt.split('').reverse().join('');
     }
     return Buffer.from(cnt);
@@ -253,16 +254,11 @@ let searchDataTransformFn = (args, filePath, line) => {
                     let _presence = [];
                     presence = presence.map(v => {
                         let el = $(v);
-                        let els = el.parents();
-                        _presence.push(el);
-                        els.each(parent => {
-                            _presence.push(els.eq(parent));
+                        el.each(i => {
+                            let parent = $(el.eq(i));
+                            _presence.push(parent.parents().html());
                         });
                         return el;
-                    });
-                    _presence = presence.map(v => {
-                        let el = $(v);
-                        return el.parents().html();
                     });
                     if (presence.length) {
                         self.push(bufferContentByPresence(args, _presence, rev));
