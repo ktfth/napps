@@ -252,7 +252,7 @@ let searchDataTransformFn = (args, filePath, line) => {
                     let $ = require('jquery')(dom.window);
                     presence = presence.map(v => {
                         let el = $(v);
-                        return el.prev().html();
+                        return el.parents().html();
                     });
                     if (presence.length) {
                         self.push(bufferContentByPresence(args, presence, rev));
