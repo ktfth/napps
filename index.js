@@ -1,6 +1,7 @@
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 const { Transform } = require('stream');
+const jquery = require('jquery');
 
 let findFn = (v, content) => content.indexOf(v) > -1;
 exports.find = findFn;
@@ -250,17 +251,18 @@ let searchDataTransformFn = (args, filePath, line) => {
                 let context = this;
                 if (hasExtractFlag(args) && html) {
                     let dom = new JSDOM(raw.toString());
-                    let $ = require('jquery')(dom.window);
+                    let $ = jquery(dom.window);
                     let _presence = [];
                     presence = presence.map(v => {
                         let el = $(v);
-                        el.each(i => {
-                            let parent = $(el.eq(i));
-                            let parentsHtml = parent.parents().html();
-                            if (_presence.indexOf(parentsHtml) === -1) {
-                                _presence.push(parentsHtml);
-                            }
-                        });
+                        if (v !== '.' || v !== '') {
+                            el.each(i => {
+                                let parent = el.parent().eq(i);
+                                if (_presence.indexOf(parent.html()) === -1) {
+                                    _presence.push(parent.html());
+                                }
+                            });
+                        }
                         return el;
                     });
                     if (presence.length) {
