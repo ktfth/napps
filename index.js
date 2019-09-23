@@ -256,7 +256,10 @@ let searchDataTransformFn = (args, filePath, line) => {
                         let el = $(v);
                         el.each(i => {
                             let parent = $(el.eq(i));
-                            _presence.push(parent.parents().html());
+                            let parentsHtml = parent.parents().html();
+                            if (_presence.indexOf(parentsHtml) === -1) {
+                                _presence.push(parentsHtml);
+                            }
                         });
                         return el;
                     });
