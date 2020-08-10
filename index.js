@@ -6,6 +6,11 @@ const jquery = require('jquery');
 class Agent {
   constructor(content) {
     this.content = content;
+    this.find = this.find.bind(this);
+  }
+
+  find(v) {
+    return findFn(v, this.content);
   }
 }
 exports.Agent = Agent;

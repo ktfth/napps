@@ -15,6 +15,16 @@ describe('Nap Agent', () => {
     let actual = new nap.Agent('some content about agent');
     assert.equal(actual.content, 'some content about agent');
   });
+
+  it('should find text in content', () => {
+    let actual = new nap.Agent('i love grapes');
+    assert.ok(actual.find('love'), 'failing on find content');
+  });
+
+  it('should not find the text in content', () => {
+    let actual = new nap.Agent('i love grapes');
+    assert.ok(!actual.find('orange'), 'failing to be tolerant');
+  });
 });
 
 describe('Nap text searcher', () => {
@@ -23,7 +33,7 @@ describe('Nap text searcher', () => {
     });
 
     it('find not the text in content', () => {
-        assert.ok(!nap.find('orange', 'i love grapes', 'failing to be tolerant'))
+        assert.ok(!nap.find('orange', 'i love grapes'), 'failing to be tolerant')
     });
 
     it('match content by term', () => {
