@@ -25,6 +25,11 @@ describe('Nap Agent', () => {
     let actual = new nap.Agent('i love grapes');
     assert.ok(!actual.find('orange'), 'failing to be tolerant');
   });
+
+  it('should match content by term', () => {
+    let actual = new nap.Agent('some-value');
+    assert.ok(actual.match('some') !== null);
+  });
 });
 
 describe('Nap text searcher', () => {

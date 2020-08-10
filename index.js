@@ -7,10 +7,15 @@ class Agent {
   constructor(content) {
     this.content = content;
     this.find = this.find.bind(this);
+    this.match = this.match.bind(this);
   }
 
   find(v) {
     return findFn(v, this.content);
+  }
+
+  match(v) {
+    return matchContent(v, this.content);
   }
 }
 exports.Agent = Agent;
