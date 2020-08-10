@@ -3,6 +3,13 @@ const { JSDOM } = jsdom;
 const { Transform } = require('stream');
 const jquery = require('jquery');
 
+class Agent {
+  constructor(content) {
+    this.content = content;
+  }
+}
+exports.Agent = Agent;
+
 let findFn = (v, content) => content.indexOf(v) > -1;
 exports.find = findFn;
 

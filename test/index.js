@@ -5,6 +5,18 @@ const assert = require('assert');
 
 const { Transform } = require('stream');
 
+describe('Nap Agent', () => {
+  it('should be an instance of described', () => {
+    let actual = new nap.Agent();
+    assert.ok(actual instanceof nap.Agent);
+  });
+
+  it('should have content', () => {
+    let actual = new nap.Agent('some content about agent');
+    assert.equal(actual.content, 'some content about agent');
+  });
+});
+
 describe('Nap text searcher', () => {
     it('find text in content', () => {
         assert.ok(nap.find('love', 'i love grapes'), 'failing on find content')
