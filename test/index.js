@@ -52,6 +52,11 @@ describe('Nap Agent', () => {
     let actual = new nap.Agent('i love grapes');
     assert.ok(actual.findAndHasNotFlag('love'));
   });
+
+  it('should have presence', () => {
+    let actual = new nap.Agent('some-value');
+    assert.deepEqual(actual.presence(['--extract', 'some-value']), ['some-value']);
+  });
 });
 
 describe('Nap text searcher', () => {
@@ -83,7 +88,7 @@ describe('Nap text searcher', () => {
 
     it('find and has not extraction flag', () => {
         assert.ok(nap.findAndHasNotFlag('love', 'i love grapes'));
-    })
+    });
 
     it('presence', () => {
         assert.deepEqual(nap.presence('some-value', ['--extract', 'some-value']), ['some-value']);

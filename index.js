@@ -11,6 +11,7 @@ class Agent {
     this.count = this.count.bind(this);
     this.findAndHasNotFlags = this.findAndHasNotFlags.bind(this);
     this.findAndHasNotFlag = this.findAndHasNotFlag.bind(this);
+    this.presence = this.presence.bind(this);
   }
 
   find(v) {
@@ -31,6 +32,10 @@ class Agent {
 
   findAndHasNotFlag(v) {
     return findAndHasNotFlag(v, this.content);
+  }
+
+  presence(args) {
+    return presenceFn(this.content, args);
   }
 }
 exports.Agent = Agent;
