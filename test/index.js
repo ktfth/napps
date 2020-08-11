@@ -47,6 +47,11 @@ describe('Nap Agent', () => {
     let actual = new nap.Agent('i love grapes');
     assert.ok(actual.findAndHasNotFlags('love'));
   });
+
+  it('should find and has not extraction flag', () => {
+    let actual = new nap.Agent('i love grapes');
+    assert.ok(actual.findAndHasNotFlag('love'));
+  });
 });
 
 describe('Nap text searcher', () => {
