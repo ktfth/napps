@@ -30,6 +30,13 @@ describe('Nap Agent', () => {
     let actual = new nap.Agent('some-value');
     assert.ok(actual.match('some') !== null);
   });
+
+  it('should match content by term returning the input', () => {
+    let v = new RegExp('some', 'g');
+    let actual = new nap.Agent('some-value');
+    let expected = 'some-value'.match(v);
+    assert.deepEqual(actual.match('some'), expected);
+  });
 });
 
 describe('Nap text searcher', () => {
