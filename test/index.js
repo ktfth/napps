@@ -42,6 +42,11 @@ describe('Nap Agent', () => {
     let actual = new nap.Agent('sample some sample');
     assert.equal(actual.count('sample'), 2);
   });
+
+  it('should find and has not verified flags', () => {
+    let actual = new nap.Agent('i love grapes');
+    assert.ok(actual.findAndHasNotFlags('love'));
+  });
 });
 
 describe('Nap text searcher', () => {
