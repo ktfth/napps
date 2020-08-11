@@ -243,7 +243,8 @@ let searchDataTransformFn = (args, filePath, line) => {
             let self = this;
             let rev = args.indexOf(_revFlag) > -1;
             let html = args.indexOf('--html') > -1;
-            let presence = presenceFn(raw, args);
+            let agent = new Agent(raw);
+            let presence = agent.presence(args);
             let presenceRegexp = prepareRegExpPresence(args, presence);
 
             let resumePresenceCounterMap = countPresenceMap;
@@ -333,7 +334,8 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
         transform(raw, encoding, callback) {
             let self = this;
             let rev = args.indexOf(_revFlag) > -1;
-            let presence = presenceFn(raw, args);
+            let agent = new Agent(raw);
+            let presence = agent.presence(args);
             let presenceRegexp = prepareRegExpPresence(args, presence);
 
             let resumeCounter = (args, presence, raw) => {
