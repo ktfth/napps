@@ -8,6 +8,7 @@ class Agent {
     this.content = content;
     this.find = this.find.bind(this);
     this.match = this.match.bind(this);
+    this.count = this.count.bind(this);
   }
 
   find(v) {
@@ -16,6 +17,10 @@ class Agent {
 
   match(v) {
     return matchContent(v, this.content);
+  }
+
+  count(v) {
+    return countFn(v, this.content);
   }
 }
 exports.Agent = Agent;

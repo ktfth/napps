@@ -37,6 +37,11 @@ describe('Nap Agent', () => {
     let expected = 'some-value'.match(v);
     assert.deepEqual(actual.match('some'), expected);
   });
+
+  it('should count some times the content appears', () => {
+    let actual = new nap.Agent('sample some sample');
+    assert.equal(actual.count('sample'), 2);
+  });
 });
 
 describe('Nap text searcher', () => {
