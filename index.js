@@ -237,6 +237,19 @@ let bufferContentByFile = (fp, ags, pr, rev=null) => {
 };
 exports.bufferContentByFile = bufferContentByFile;
 
+let resumeCounter = (ctx, args, presence, raw, rev) => {
+    let self = ctx;
+
+    let resumePresenceCounterMap = countPresenceMap;
+
+    if (hasNotExtractFlagWithPresence(args, presence)) {
+        presence = resumePresenceCounterMap(presence, raw);
+        if (presence.length) {
+            self.push(bufferContentByPresence(args, presence, rev));
+        }
+    }
+};
+
 let searchDataTransformFn = (args, filePath, line) => {
     return new Transform({
         transform(raw, encoding, callback) {
@@ -246,17 +259,6 @@ let searchDataTransformFn = (args, filePath, line) => {
             let agent = new Agent(raw);
             let presence = agent.presence(args);
             let presenceRegexp = prepareRegExpPresence(args, presence);
-
-            let resumePresenceCounterMap = countPresenceMap;
-
-            let resumeCounter = (args, presence, raw) => {
-                if (hasNotExtractFlagWithPresence(args, presence)) {
-                    presence = resumePresenceCounterMap(presence, raw);
-                    if (presence.length) {
-                        self.push(bufferContentByPresence(args, presence, rev));
-                    }
-                }
-            };
 
             let extractFragment = (presence, raw) => {
                 if (hasNotRegExpFlag(args)) {
@@ -320,7 +322,7 @@ let searchDataTransformFn = (args, filePath, line) => {
 
             presence = filterReFlag(presence);
 
-            resumeCounter(args, presence, raw);
+            resumeCounter(self, args, presence, raw, rev);
             resumeExtraction(args, presence, presenceRegexp, raw);
 
             callback();
