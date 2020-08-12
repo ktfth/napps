@@ -250,6 +250,13 @@ let resumeCounter = (ctx, args, presence, raw, rev) => {
     }
 };
 
+let extractFragment = (presence, raw) => {
+    if (hasNotRegExpFlag(args)) {
+        presence = presence.map(v => extractFn(v, raw));
+    }
+    return presence;
+};
+
 let searchDataTransformFn = (args, filePath, line) => {
     return new Transform({
         transform(raw, encoding, callback) {
@@ -259,13 +266,6 @@ let searchDataTransformFn = (args, filePath, line) => {
             let agent = new Agent(raw);
             let presence = agent.presence(args);
             let presenceRegexp = prepareRegExpPresence(args, presence);
-
-            let extractFragment = (presence, raw) => {
-                if (hasNotRegExpFlag(args)) {
-                    presence = presence.map(v => extractFn(v, raw));
-                }
-                return presence;
-            };
 
             let extractRegExpFragment = (ags, pr, prp, cnt) => {
                 if (hasRegExpFlagAndRegExpMap(ags, prp)) {
