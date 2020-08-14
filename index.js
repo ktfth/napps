@@ -342,53 +342,54 @@ let searchDataTransformFn = (args, filePath, line) => {
 };
 exports.searchDataTransform = searchDataTransformFn;
 
+resumeCounter = (args, presence, raw) => {
+    if (hasNotExtractFlagWithPresence(args, presence)) {
+        presence = countPresenceMap(presence, raw);
+        if (presence.length) {
+            self.push(bufferContentByFile(filePath, args, presence, rev));
+        }
+    }
+};
+
+resumeExtraction = (self, ags, pr, prp, cnt, fp) => {
+    let rev = ags.indexOf(_revFlag) > -1;
+
+    if (hasExtractFlagWithPresence(ags, pr)) {
+        if (hasNotRegExpFlag(ags)) {
+            pr = pr.map(v => extractFn(v, cnt));
+        } if (hasRegExpFlagAndRegExpMap(ags, prp)) {
+            pr = prp.map((v, i) => {
+                let out = '';
+                let matchingCase = cnt.toString().match(v);
+                let reFlag = _regularExpressionFlag;
+                let ufd = undefined;
+                let ismtcc = matchingCase !== null;
+                let isnmre = ismtcc && matchingCase[0] !== reFlag;
+                let isnmi = ismtcc && matchingCase.input !== ufd;
+                let matchingOpts = (isnmre && isnmi);
+                if (matchingCase && matchingOpts) {
+                    out = matchingCase.input;
+                }
+                return out;
+            });
+        } if (pr.filter(v => v !== '').length) {
+            self.push(bufferContentByFile(fp, ags, pr, rev));
+        }
+    }
+};
+
 let traversalSearchDataTransformFn = (args, filePath, line) => {
     return new Transform({
         transform(raw, encoding, callback) {
             let self = this;
-            let rev = args.indexOf(_revFlag) > -1;
             let agent = new Agent(raw);
             let presence = agent.presence(args);
             let presenceRegexp = prepareRegExpPresence(args, presence);
 
-            let resumeCounter = (args, presence, raw) => {
-                if (hasNotExtractFlagWithPresence(args, presence)) {
-                    presence = countPresenceMap(presence, raw);
-                    if (presence.length) {
-                        self.push(bufferContentByFile(filePath, args, presence, rev));
-                    }
-                }
-            };
-
-            let resumeExtraction = (ags, pr, prp, cnt, fp) => {
-                if (hasExtractFlagWithPresence(ags, pr)) {
-                    if (hasNotRegExpFlag(ags)) {
-                        pr = pr.map(v => extractFn(v, cnt));
-                    } if (hasRegExpFlagAndRegExpMap(ags, prp)) {
-                        pr = prp.map((v, i) => {
-                            let out = '';
-                            let matchingCase = cnt.toString().match(v);
-                            let reFlag = _regularExpressionFlag;
-                            let ufd = undefined;
-                            let ismtcc = matchingCase !== null;
-                            let isnmre = ismtcc && matchingCase[0] !== reFlag;
-                            let isnmi = ismtcc && matchingCase.input !== ufd;
-                            let matchingOpts = (isnmre && isnmi);
-                            if (matchingCase && matchingOpts) {
-                                out = matchingCase.input;
-                            }
-                            return out;
-                        });
-                    } if (pr.filter(v => v !== '').length) {
-                        self.push(bufferContentByFile(fp, ags, pr, rev));
-                    }
-                }
-            };
-
             presence = filterReFlag(presence);
 
             resumeCounter(args, presence, raw);
-            resumeExtraction(args, presence, presenceRegexp, raw, filePath);
+            resumeExtraction(self, args, presence, presenceRegexp, raw, filePath);
 
             callback();
         }
