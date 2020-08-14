@@ -52,7 +52,8 @@ exports.matchContent = matchContent;
 
 let countFn = (v, content) => {
     let out = 0;
-    out = matchContent(v, content);
+    let agent = new Agent(content);
+    out = agent.match(v);
     out = out === null ? 0 : Math.max(0, out.length);
     return out;
 };
@@ -213,7 +214,8 @@ const _revFlag = '--rev';
 exports.revFlag = _revFlag;
 
 let countPresenceMap = (pr, cnt) => {
-    let ctr = (v) => countFn(v, cnt);
+    let agent = new Agent(cnt);
+    let ctr = (v) => agent.count(v);
     return pr.filter(v => ctr(v) > 0).map(v => v + ' (' + ctr(v) + ')');
 };
 exports.countPresenceMap = countPresenceMap;
@@ -342,7 +344,8 @@ let searchDataTransformFn = (args, filePath, line) => {
 };
 exports.searchDataTransform = searchDataTransformFn;
 
-let resumeCounterTraversal = (args, presence, raw) => {
+let resumeCounterTraversal = (self, args, presence, raw, filePath) => {
+    let rev = args.indexOf(_revFlag) > -1;
     if (hasNotExtractFlagWithPresence(args, presence)) {
         presence = countPresenceMap(presence, raw);
         if (presence.length) {
@@ -388,7 +391,7 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
 
             presence = filterReFlag(presence);
 
-            resumeCounterTraversal(args, presence, raw);
+            resumeCounterTraversal(self, args, presence, raw, filePath);
             resumeExtractionTraversal(self, args, presence, presenceRegexp, raw, filePath);
 
             callback();
