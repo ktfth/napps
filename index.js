@@ -250,7 +250,7 @@ let resumeCounter = (ctx, args, presence, raw, rev) => {
     }
 };
 
-let extractFragment = (presence, raw) => {
+let extractFragment = (args, presence, raw) => {
     if (hasNotRegExpFlag(args)) {
         presence = presence.map(v => extractFn(v, raw));
     }
@@ -312,7 +312,7 @@ let resumeExtraction = (self, args, presence, presenceRegexp, raw) => {
             delete _presence;
         }
     } else if (hasExtractFlagWithPresence(args, presence)) {
-        presence = extractFragment(presence, raw);
+        presence = extractFragment(args, presence, raw);
         presence = extractRegExpFragment(args, presence, presenceRegexp, raw);
         presence = presence.filter(v => v !== '');
         if (presence.length) {
@@ -342,7 +342,7 @@ let searchDataTransformFn = (args, filePath, line) => {
 };
 exports.searchDataTransform = searchDataTransformFn;
 
-resumeCounter = (args, presence, raw) => {
+let resumeCounterTraversal = (args, presence, raw) => {
     if (hasNotExtractFlagWithPresence(args, presence)) {
         presence = countPresenceMap(presence, raw);
         if (presence.length) {
@@ -351,7 +351,7 @@ resumeCounter = (args, presence, raw) => {
     }
 };
 
-resumeExtraction = (self, ags, pr, prp, cnt, fp) => {
+let resumeExtractionTraversal = (self, ags, pr, prp, cnt, fp) => {
     let rev = ags.indexOf(_revFlag) > -1;
 
     if (hasExtractFlagWithPresence(ags, pr)) {
@@ -388,8 +388,8 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
 
             presence = filterReFlag(presence);
 
-            resumeCounter(args, presence, raw);
-            resumeExtraction(self, args, presence, presenceRegexp, raw, filePath);
+            resumeCounterTraversal(args, presence, raw);
+            resumeExtractionTraversal(self, args, presence, presenceRegexp, raw, filePath);
 
             callback();
         }
