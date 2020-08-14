@@ -277,12 +277,20 @@ let extractRegExpFragment = (ags, pr, prp, cnt) => {
     return pr;
 };
 
+let composeManipulation = (raw) => {
+  let out = {};
+  out['dom'] = new JSDOM(raw.toString());
+  out['$'] = jquery(out.dom.window);
+  out['_presence'] = [];
+  return out;
+};
+
 let resumeExtraction = (self, args, presence, presenceRegexp, raw) => {
+    let rev = args.indexOf(_revFlag) > -1;
+    let html = args.indexOf('--html') > -1;
     let context = this;
     if (hasExtractFlag(args) && html) {
-        let dom = new JSDOM(raw.toString());
-        let $ = jquery(dom.window);
-        let _presence = [];
+        let { dom, $, _presence } = composeManipulation(raw);
         presence = presence.map(v => {
             let el = $(v);
             if (v !== '.' || v !== '') {
@@ -315,7 +323,6 @@ let searchDataTransformFn = (args, filePath, line) => {
         transform(raw, encoding, callback) {
             let self = this;
             let rev = args.indexOf(_revFlag) > -1;
-            let html = args.indexOf('--html') > -1;
             let agent = new Agent(raw);
             let presence = agent.presence(args);
             let presenceRegexp = prepareRegExpPresence(args, presence);
