@@ -285,24 +285,28 @@ let composeManipulation = (raw) => {
   return out;
 };
 
+let mapPresence = ($, presence, _presence) => {
+  return presence.map(v => {
+      let el = $(v);
+      if (v !== '.' || v !== '') {
+          el.each(i => {
+              let parent = el.parent().eq(i);
+              if (_presence.indexOf(parent.html()) === -1) {
+                  _presence.push(parent.html());
+              }
+          });
+      }
+      return el;
+  });
+}
+
 let resumeExtraction = (self, args, presence, presenceRegexp, raw) => {
     let rev = args.indexOf(_revFlag) > -1;
     let html = args.indexOf('--html') > -1;
     let context = this;
     if (hasExtractFlag(args) && html) {
         let { dom, $, _presence } = composeManipulation(raw);
-        presence = presence.map(v => {
-            let el = $(v);
-            if (v !== '.' || v !== '') {
-                el.each(i => {
-                    let parent = el.parent().eq(i);
-                    if (_presence.indexOf(parent.html()) === -1) {
-                        _presence.push(parent.html());
-                    }
-                });
-            }
-            return el;
-        });
+        presence = mapPresence($, presence, _presence);
         if (presence.length) {
             self.push(bufferContentByPresence(args, _presence, rev));
             delete _presence;
