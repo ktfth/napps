@@ -257,6 +257,59 @@ let extractFragment = (presence, raw) => {
     return presence;
 };
 
+let extractRegExpFragment = (ags, pr, prp, cnt) => {
+    if (hasRegExpFlagAndRegExpMap(ags, prp)) {
+        pr = prp.map((v, i) => {
+            let out = '';
+            let matchingCase = cnt.toString().match(v);
+            let reFlag = _regularExpressionFlag;
+            let ufd = undefined;
+            let ismtcc = matchingCase !== null;
+            let isnmre = ismtcc && matchingCase[0] !== reFlag;
+            let isnmi = ismtcc && matchingCase.input !== ufd;
+            let matchingOpts = (isnmre && isnmi);
+            if (matchingCase && matchingOpts) {
+                out = matchingCase.input
+            }
+            return out;
+        });
+    }
+    return pr;
+};
+
+let resumeExtraction = (args, presence, presenceRegexp, raw) => {
+    let context = this;
+    if (hasExtractFlag(args) && html) {
+        let dom = new JSDOM(raw.toString());
+        let $ = jquery(dom.window);
+        let _presence = [];
+        presence = presence.map(v => {
+            let el = $(v);
+            if (v !== '.' || v !== '') {
+                el.each(i => {
+                    let parent = el.parent().eq(i);
+                    if (_presence.indexOf(parent.html()) === -1) {
+                        _presence.push(parent.html());
+                    }
+                });
+            }
+            return el;
+        });
+        if (presence.length) {
+            self.push(bufferContentByPresence(args, _presence, rev));
+            delete _presence;
+        }
+    } else if (hasExtractFlagWithPresence(args, presence)) {
+        presence = extractFragment(presence, raw);
+        presence = extractRegExpFragment(args, presence, presenceRegexp, raw);
+        presence = presence.filter(v => v !== '');
+        if (presence.length) {
+          self.push(bufferContentByPresence(args, presence, rev));
+        }
+        process.exit(0);
+    }
+};
+
 let searchDataTransformFn = (args, filePath, line) => {
     return new Transform({
         transform(raw, encoding, callback) {
@@ -266,59 +319,6 @@ let searchDataTransformFn = (args, filePath, line) => {
             let agent = new Agent(raw);
             let presence = agent.presence(args);
             let presenceRegexp = prepareRegExpPresence(args, presence);
-
-            let extractRegExpFragment = (ags, pr, prp, cnt) => {
-                if (hasRegExpFlagAndRegExpMap(ags, prp)) {
-                    pr = prp.map((v, i) => {
-                        let out = '';
-                        let matchingCase = cnt.toString().match(v);
-                        let reFlag = _regularExpressionFlag;
-                        let ufd = undefined;
-                        let ismtcc = matchingCase !== null;
-                        let isnmre = ismtcc && matchingCase[0] !== reFlag;
-                        let isnmi = ismtcc && matchingCase.input !== ufd;
-                        let matchingOpts = (isnmre && isnmi);
-                        if (matchingCase && matchingOpts) {
-                            out = matchingCase.input
-                        }
-                        return out;
-                    });
-                }
-                return pr;
-            };
-
-            let resumeExtraction = (args, presence, presenceRegexp, raw) => {
-                let context = this;
-                if (hasExtractFlag(args) && html) {
-                    let dom = new JSDOM(raw.toString());
-                    let $ = jquery(dom.window);
-                    let _presence = [];
-                    presence = presence.map(v => {
-                        let el = $(v);
-                        if (v !== '.' || v !== '') {
-                            el.each(i => {
-                                let parent = el.parent().eq(i);
-                                if (_presence.indexOf(parent.html()) === -1) {
-                                    _presence.push(parent.html());
-                                }
-                            });
-                        }
-                        return el;
-                    });
-                    if (presence.length) {
-                        self.push(bufferContentByPresence(args, _presence, rev));
-                        delete _presence;
-                    }
-                } else if (hasExtractFlagWithPresence(args, presence)) {
-                    presence = extractFragment(presence, raw);
-                    presence = extractRegExpFragment(args, presence, presenceRegexp, raw);
-                    presence = presence.filter(v => v !== '');
-                    if (presence.length) {
-                      self.push(bufferContentByPresence(args, presence, rev));
-                    }
-                    process.exit(0);
-                }
-            };
 
             presence = filterReFlag(presence);
 
