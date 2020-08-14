@@ -277,7 +277,7 @@ let extractRegExpFragment = (ags, pr, prp, cnt) => {
     return pr;
 };
 
-let resumeExtraction = (args, presence, presenceRegexp, raw) => {
+let resumeExtraction = (self, args, presence, presenceRegexp, raw) => {
     let context = this;
     if (hasExtractFlag(args) && html) {
         let dom = new JSDOM(raw.toString());
@@ -323,7 +323,7 @@ let searchDataTransformFn = (args, filePath, line) => {
             presence = filterReFlag(presence);
 
             resumeCounter(self, args, presence, raw, rev);
-            resumeExtraction(args, presence, presenceRegexp, raw);
+            resumeExtraction(self, args, presence, presenceRegexp, raw);
 
             callback();
         }
