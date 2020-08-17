@@ -62,23 +62,24 @@ if (isPipe) {
     let limit = 0;
 
     let iterateSingleAndMultPipeline = (ags, d, dirs) => {
+        let ecs = excludesMap(filterExclude(ags));
+
         for (let i = 0, l = dirs.length; i < l; i += 1) {
           let file = dirs[i];
           let filePath = path.resolve(d, file.name);
-          let ecs = excludesMap(filterExclude(ags));
 
           if (ecs !== undefined && ecs.length) {
               let revised = [];
-              ecs.map(v => {
-                  console.log(v)
-                  let isNotExcluded = filePath.indexOf(v[1]) === -1;
-                  if (isNotExcluded && revised.indexOf(filePath) === -1 && fs.existsSync(filePath)) {
-                      singlePipeline(ags, filePath, ecs);
-                      mulPipeline(ags, filePath, ecs);
-                      revised.push(filePath);
-                  }
-                  return v;
-              });
+              let latestExcluded = [];
+              for (let v of ecs) {
+                let isNotExcluded = v.length === 2 && filePath.indexOf(v[1]) === -1;
+                if (filePath.indexOf(v[1]) > -1) latestExcluded.push(filePath);
+                if (isNotExcluded && latestExcluded.length === 0 && revised.indexOf(filePath) === -1 && fs.existsSync(filePath)) {
+                    singlePipeline(ags, filePath, ecs);
+                    mulPipeline(ags, filePath, ecs);
+                    revised.push(filePath);
+                }
+              }
           } else {
               if (fs.existsSync(filePath)) {
                   singlePipeline(ags, filePath, ecs);
@@ -89,22 +90,24 @@ if (isPipe) {
     };
 
     let iterateTraversalPipeline = (ags, d, dirs) => {
+        let ecs = excludesMap(filterExclude(ags));
+
         for (let i = 0, l = dirs.length; i < l; i += 1) {
             let directory = dirs[i];
             let access = path.resolve(d, directory.name);
-            let ecs = excludesMap(filterExclude(ags));
 
             if (ecs !== undefined && ecs.length) {
                 let revised = [];
-                ecs.map(v => {
-                    let isNotExcluded = access.indexOf(v[1]) === -1;
-                    if (isNotExcluded && revised.indexOf(access) === -1 && fs.existsSync(access)) {
-                        traverse(access, dirs);
-                        limit += 1;
-                        revised.push(access);
-                    }
-                    return v;
-                });
+                let latestExcluded = [];
+                for (let v of ecs) {
+                  let isNotExcluded = v.length === 2 && access.indexOf(v[1]) === -1;
+                  if (access.indexOf(v[1]) > -1) latestExcluded.push(access);
+                  if (isNotExcluded && latestExcluded.length === 0 && revised.indexOf(access) === -1 && fs.existsSync(access)) {
+                      traverse(access, dirs);
+                      limit += 1;
+                      revised.push(access);
+                  }
+                }
             } else {
                 if (fs.existsSync(access)) {
                     traverse(access, dirs);
