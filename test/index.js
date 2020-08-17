@@ -205,6 +205,7 @@ describe('Nap essentials', () => {
 
     it('filter exclude', () => {
         assert.deepEqual(nap.filterExclude(['--exclude=txt', 'some-test']), ['--exclude=txt']);
+        assert.deepEqual(nap.filterExclude(['--exclude=txt', 'some-test', '--exclude=node_modules']), ['--exclude=txt', '--exclude=node_modules']);
     });
 
     it('excludes map', () => {
