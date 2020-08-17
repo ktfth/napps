@@ -70,6 +70,7 @@ if (isPipe) {
           if (ecs !== undefined && ecs.length) {
               let revised = [];
               ecs.map(v => {
+                  console.log(v)
                   let isNotExcluded = filePath.indexOf(v[1]) === -1;
                   if (isNotExcluded && revised.indexOf(filePath) === -1 && fs.existsSync(filePath)) {
                       singlePipeline(ags, filePath, ecs);
