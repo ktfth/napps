@@ -106,14 +106,20 @@ if (isPipe) {
             if (ecs !== undefined && ecs.length) {
                 let revised = [];
                 let latestExcluded = [];
+                let revisedExecutionPipeline = [];
                 for (let v of ecs) {
                   let isNotExcluded = v.length === 2 && access.indexOf(v[1]) === -1;
-                  if (access.indexOf(v[1]) > -1) latestExcluded.push(access);
+                  if (access.indexOf(v[1]) > -1 && revisedExecutionPipeline.indexOf(access) > -1) {
+                    revisedExecutionPipeline.splice(revisedExecutionPipeline.indexOf(access), 1);
+                  }
                   if (isNotExcluded && latestExcluded.length === 0 && revised.indexOf(access) === -1 && fs.existsSync(access)) {
-                      traverse(access, dirs);
-                      limit += 1;
+                      revisedExecutionPipeline.push(access);
                       revised.push(access);
                   }
+                }
+                for (let executionAccess of revisedExecutionPipeline) {
+                  traverse(executionAccess, dirs);
+                  limit += 1;
                 }
             } else {
                 if (fs.existsSync(access)) {
