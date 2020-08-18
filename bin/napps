@@ -70,15 +70,22 @@ if (isPipe) {
 
           if (ecs !== undefined && ecs.length) {
               let revised = [];
-              let latestExcluded = [];
+              let revisedExecutionPipeline = [];
               for (let v of ecs) {
                 let isNotExcluded = v.length === 2 && filePath.indexOf(v[1]) === -1;
-                if (filePath.indexOf(v[1]) > -1) latestExcluded.push(filePath);
-                if (isNotExcluded && latestExcluded.length === 0 && revised.indexOf(filePath) === -1 && fs.existsSync(filePath)) {
-                    singlePipeline(ags, filePath, ecs);
-                    mulPipeline(ags, filePath, ecs);
+                let isRevised = revised.indexOf(filePath) === -1;
+                let exists = fs.existsSync(filePath);
+                if (filePath.indexOf(v[1]) > -1 && revisedExecutionPipeline.indexOf(filePath) > -1) {
+                  revisedExecutionPipeline.splice(revisedExecutionPipeline.indexOf(filePath), 1);
+                }
+                if (isNotExcluded && isRevised && exists) {
+                    revisedExecutionPipeline.push(filePath);
                     revised.push(filePath);
                 }
+              }
+              for (let executionFilePath of revisedExecutionPipeline) {
+                singlePipeline(ags, executionFilePath, ecs);
+                mulPipeline(ags, executionFilePath, ecs);
               }
           } else {
               if (fs.existsSync(filePath)) {
