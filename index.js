@@ -383,7 +383,7 @@ class ResumeCounterObserver extends Observer {
 
 class Mediator {}
 
-class SearchDataTransformMediator extends Mediator {
+class SearchDataTransformResumeCounterMediator extends Mediator {
   constructor(args) {
     super(args);
 
@@ -406,7 +406,7 @@ let searchDataTransformFn = (args, filePath, line) => {
 
             presence = filterReFlag(presence);
 
-            new SearchDataTransformMediator([self, args, presence, raw, rev]);
+            new SearchDataTransformResumeCounterMediator([self, args, presence, raw, rev]);
             resumeExtraction(self, args, presence, presenceRegexp, raw);
 
             callback();
