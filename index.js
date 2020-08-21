@@ -367,6 +367,34 @@ let resumeExtraction = (self, args, presence, presenceRegexp, raw) => {
     }
 };
 
+class ResumeCounterObserver extends Observer {
+  constructor(subject) {
+    super(subject);
+    this.subject = subject;
+    this.subject.attach(this);
+    this.update = this.update.bind(this);
+  }
+
+  update() {
+    let args = this.getState();
+    resumeCounter.apply(this, args);
+  }
+}
+
+class Mediator {}
+
+class SearchDataTransformMediator extends Mediator {
+  constructor(args) {
+    super(args);
+
+    let SearchDataTransformSubject = new Subject();
+
+    new ResumeCounterObserver(SearchDataTransformSubject);
+
+    SearchDataTransformSubject.setState(args);
+  }
+}
+
 let searchDataTransformFn = (args, filePath, line) => {
     return new Transform({
         transform(raw, encoding, callback) {
@@ -378,7 +406,7 @@ let searchDataTransformFn = (args, filePath, line) => {
 
             presence = filterReFlag(presence);
 
-            resumeCounter(self, args, presence, raw, rev);
+            new SearchDataTransformMediator([self, args, presence, raw, rev]);
             resumeExtraction(self, args, presence, presenceRegexp, raw);
 
             callback();
