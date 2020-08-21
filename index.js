@@ -387,11 +387,11 @@ class SearchDataTransformResumeCounterMediator extends Mediator {
   constructor(args) {
     super(args);
 
-    let SearchDataTransformSubject = new Subject();
+    let SearchDataTransformResumeCounterSubject = new Subject();
 
-    new ResumeCounterObserver(SearchDataTransformSubject);
+    new ResumeCounterObserver(SearchDataTransformResumeCounterSubject);
 
-    SearchDataTransformSubject.setState(args);
+    SearchDataTransformResumeCounterSubject.setState(args);
   }
 }
 
