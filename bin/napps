@@ -83,6 +83,13 @@ if (isPipe) {
                     revised.push(filePath);
                 }
               }
+              ecs.map((v, i) => {
+                revisedExecutionPipeline.map(w => {
+                  if (w.indexOf(v[1]) > -1) {
+                    revisedExecutionPipeline.splice(i, 1);
+                  }
+                });
+              });
               for (let executionFilePath of revisedExecutionPipeline) {
                 singlePipeline(ags, executionFilePath, ecs);
                 mulPipeline(ags, executionFilePath, ecs);
@@ -117,6 +124,13 @@ if (isPipe) {
                       revised.push(access);
                   }
                 }
+                ecs.map((v, i) => {
+                  revisedExecutionPipeline.map(w => {
+                    if (w.indexOf(v[1]) > -1) {
+                      revisedExecutionPipeline.splice(i, 1);
+                    }
+                  });
+                });
                 for (let executionAccess of revisedExecutionPipeline) {
                   traverse(executionAccess, dirs);
                   limit += 1;
