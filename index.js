@@ -376,7 +376,7 @@ class ResumeCounterObserver extends Observer {
   }
 
   update() {
-    let args = this.getState();
+    let args = this.subject.getState();
     resumeCounter.apply(this, args);
   }
 }
@@ -390,34 +390,34 @@ class ResumeExtractionObserver extends Observer {
   }
 
   update() {
-    let args = this.getState();
+    let args = this.subject.getState();
     resumeExtraction.apply(this, args);
   }
 }
 
 class Mediator {}
 
-class SearchDataTransformResumeCounterMediator extends Mediator {
+class ResumeCounterMediator extends Mediator {
   constructor(args) {
     super(args);
 
-    let SearchDataTransformResumeCounterSubject = new Subject();
+    let ResumeCounterSubject = new Subject();
 
-    new ResumeCounterObserver(SearchDataTransformResumeCounterSubject);
+    new ResumeCounterObserver(ResumeCounterSubject);
 
-    SearchDataTransformResumeCounterSubject.setState(args);
+    ResumeCounterSubject.setState(args);
   }
 }
 
-class SearchDataTransformResumeExtractionMediator extends Mediator {
+class ResumeExtractionMediator extends Mediator {
   constructor(args) {
     super(args);
 
-    let SearchDataTransformResumeExtractionSubject = new Subject();
+    let ResumeExtractionSubject = new Subject();
 
-    new ResumeExtractionObserver(SearchDataTransformResumeExtractionSubject);
+    new ResumeExtractionObserver(ResumeExtractionSubject);
 
-    SearchDataTransformResumeExtractionSubject.setState(args);
+    ResumeExtractionSubject.setState(args);
   }
 }
 
@@ -432,12 +432,12 @@ let searchDataTransformFn = (args, filePath, line) => {
 
             presence = filterReFlag(presence);
 
-            new SearchDataTransformResumeCounterMediator([self, args, presence, raw, rev]);
-            new SearchDataTransformResumeExtractionMediator([self,
-                                                             args,
-                                                             presence,
-                                                             presenceRegexp,
-                                                             raw]);
+            new ResumeCounterMediator([self, args, presence, raw, rev]);
+            new ResumeExtractionMediator([self,
+                                          args,
+                                          presence,
+                                          presenceRegexp,
+                                          raw]);
 
             callback();
         }
@@ -482,6 +482,58 @@ let resumeExtractionTraversal = (self, ags, pr, prp, cnt, fp) => {
     }
 };
 
+class ResumeCounterTraversalObserver extends Observer {
+  constructor(subject) {
+    super(subject);
+    this.subject = subject;
+    this.subject.attach(this);
+    this.update = this.update.bind(this);
+  }
+
+  update() {
+    let args = this.subject.getState();
+    resumeCounterTraversal.apply(this, args);
+  }
+}
+
+class ResumeExtractionTraversalObserver extends Observer {
+  constructor(subject) {
+    super(subject);
+    this.subject = subject;
+    this.subject.attach(this);
+    this.update = this.update.bind(this);
+  }
+
+  update() {
+    let args = this.subject.getState();
+    resumeExtractionTraversal.apply(this, args);
+  }
+}
+
+class ResumeCounterTraversalMediator extends Mediator {
+  constructor(args) {
+    super(args);
+
+    let ResumeCounterTraversalSubject = new Subject();
+
+    new ResumeCounterTraversalObserver(ResumeCounterTraversalSubject);
+
+    ResumeCounterTraversalSubject.setState(args);
+  }
+}
+
+class ResumeExtractionTraversalMediator extends Mediator {
+  constructor(args) {
+    super(args);
+
+    let ResumeExtractionTraversalSubject = new Subject();
+
+    new ResumeExtractionTraversalObserver(ResumeExtractionTraversalSubject);
+
+    ResumeExtractionTraversalSubject.setState(args);
+  }
+}
+
 let traversalSearchDataTransformFn = (args, filePath, line) => {
     return new Transform({
         transform(raw, encoding, callback) {
@@ -492,8 +544,17 @@ let traversalSearchDataTransformFn = (args, filePath, line) => {
 
             presence = filterReFlag(presence);
 
-            resumeCounterTraversal(self, args, presence, raw, filePath);
-            resumeExtractionTraversal(self, args, presence, presenceRegexp, raw, filePath);
+            new ResumeCounterTraversalMediator([self,
+                                                args,
+                                                presence,
+                                                raw,
+                                                filePath]);
+            new ResumeExtractionTraversalMediator([self,
+                                                   args,
+                                                   presence,
+                                                   presenceRegexp,
+                                                   raw,
+                                                   filePath]);
 
             callback();
         }
