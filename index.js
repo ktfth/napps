@@ -336,7 +336,8 @@ let mapPresence = ($, presence, _presence) => {
       if (v !== '.' || v !== '') {
           el.each(i => {
               let parent = el.parent().eq(i);
-              if (_presence.indexOf(parent.html()) === -1) {
+              let hasNotPresenceParent = _presence.indexOf(parent.html()) === -1
+              if (hasNotPresenceParent) {
                   _presence.push(parent.html());
               }
           });
