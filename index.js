@@ -93,11 +93,13 @@ let matchContent = (v, content) => {
 };
 exports.matchContent = matchContent;
 
+let countCheck = (mc) => mc === null ? 0 : Math.max(0, mc.length);
+
 let countFn = (v, content) => {
     let out = 0;
     let agent = new Agent(content);
     out = agent.match(v);
-    out = out === null ? 0 : Math.max(0, out.length);
+    out = countCheck(out);
     return out;
 };
 exports.count = countFn;
