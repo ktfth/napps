@@ -106,7 +106,10 @@ exports.count = countFn;
 
 let extractFn = (v, content) => {
     let out = '';
-    out = content.toString().split('\n').filter(l => findFn(v, l)).join('\n');
+    out = content
+            .toString()
+            .split('\n')
+            .filter(l => findFn(v, l)).join('\n');
     return out;
 };
 exports.extract = extractFn;
